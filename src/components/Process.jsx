@@ -12,7 +12,7 @@ const STEPS = [
     num: '02',
     tag: 'TOMA 2',
     title: 'Calibrás',
-    desc: 'Te entrenamos en nuestros estándares de evaluación, con el equipo y la comunidad. Tu criterio ya existe; acá se afina como se calibra un monitor antes de etalonar.',
+    desc: 'Aprendés el Codex —el idioma de Aurum para nombrar errores y justificar decisiones—, practicás con casos reales y te certificás. Tu criterio ya existe; acá se afina como se calibra un monitor antes de etalonar.',
   },
   {
     num: '03',
@@ -61,10 +61,10 @@ export default function Process({ reduced }) {
   }, [reduced])
 
   return (
-    <section className="scene process" id="recorrido" ref={root} data-scene="03">
+    <section className="scene process" id="recorrido" ref={root} data-scene="04">
       <div className="container">
         <div className="scene-head">
-          <span className="scene-num">ESC. 03</span>
+          <span className="scene-num">ESC. 04</span>
           <span className="scene-name">El recorrido — travelling</span>
         </div>
       </div>

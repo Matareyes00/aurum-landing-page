@@ -17,8 +17,9 @@ export default function Nav({ visible }) {
       </a>
       <div className="nav-links">
         <a href="#trabajo">El trabajo</a>
-        <a href="#recorrido">El recorrido</a>
+        <a href="#entrenamiento">Entrenamiento</a>
         <a href="#comunidad">Comunidad</a>
+        <a href="/academy/">Academy</a>
         <a className="nav-cta" href="#aplicar">
           Aplicar
         </a>

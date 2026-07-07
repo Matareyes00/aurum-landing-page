@@ -58,10 +58,10 @@ export default function Community({ reduced }) {
   }
 
   return (
-    <section className="scene community" id="comunidad" ref={root} data-scene="04">
+    <section className="scene community" id="comunidad" ref={root} data-scene="05">
       <div className="container">
         <div className="scene-head">
-          <span className="scene-num">ESC. 04</span>
+          <span className="scene-num">ESC. 05</span>
           <span className="scene-name">La comunidad</span>
         </div>
         <h2>

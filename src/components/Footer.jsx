@@ -11,6 +11,7 @@ export default function Footer() {
         <div className="footer-meta">
           <span>© 2026 Aurum Visual</span>
           <a href="mailto:hello@aurumvisual.com">hello@aurumvisual.com</a>
+          <a href="/academy/">Aurum Academy</a>
           <span>24 FPS · 2.39:1 · Grano en cámara</span>
         </div>
       </div>

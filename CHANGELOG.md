@@ -1,5 +1,85 @@
 # Aurum Landing Page — Changelog
 
+## Versión 5.0 — Sistema + Academy (segunda iteración)
+
+Segunda iteración enfocada en resolver un problema puntual: la landing enamoraba
+pero no explicaba con suficiente claridad qué hace concretamente un evaluador de
+Aurum ni cómo se entrena. El objetivo fue subir el peso del "sistema" (de ~20% a
+~35%) sin apagar el alma cinematográfica de la v4.0 — mismo nivel de frontend,
+más claridad.
+
+### Conceptos nuevos introducidos
+
+- **El Codex**: el idioma común de Aurum. Traduce lenguaje de oficio ("salto de
+  eje: la mirada cruza la línea") a dato estructurado (severidad, confianza,
+  categoría de error) que un modelo puede aprender.
+- **Workflow 01 — Preference Evaluation**: la primera tarea real de un
+  evaluador. Comparar dos tomas generadas por IA, elegir cuál sostiene la
+  escena, y justificar la decisión con criterio.
+- **La doble pata**: el diferencial de Aurum es la combinación de criterio
+  cinematográfico + rigor de anotación entrenada — no una sola de las dos.
+- **Aurum Academy**: certificación gratuita, página propia, donde el cineasta
+  aprende el Codex, practica con casos reales y se certifica para entrar a la
+  pool de proyectos pagos en dólares.
+
+### Cambios por sección
+
+- **ESC. 02 — El trabajo (Mechanism.jsx)**: las anotaciones del visor EVAL
+  ahora tienen dos capas — la línea de oficio aparece primero, medio beat
+  después se revela su traducción al Codex (`⤷ CODEX · SPATIAL CONTINUITY
+  ERROR · SEV. ALTA · CONF. 0.91`). Se agregó un demo completo de Workflow 01:
+  duelo de tomas A/B con efecto ghost en la toma perdedora, sello **ELEGIDA**
+  en la ganadora, y una hoja de evaluación (slip) con criterio, nota y firma.
+- **ESC. 03 — El entrenamiento (Training.jsx, nueva)**: sección nueva entre
+  "El trabajo" y "El recorrido". Centro visual: el Prisma — el símbolo de
+  Aurum como vidrio que traduce "tu ojo dice" → "la máquina aprende", rotando
+  entre tres ejemplos. Debajo, tres bobinas (El idioma / La práctica / La
+  firma) y una tarjeta de estreno con reflectores de première que invita a
+  Aurum Academy.
+- **ESC. 04 — El recorrido (Process.jsx)**: el paso "Calibrás" ahora nombra
+  explícitamente Codex, práctica con casos reales y certificación (antes era
+  genérico: "te entrenamos en nuestros estándares").
+- **ESC. 07 — Casting (Apply.jsx)**: agregado un piso de oficio ("ojo formado
+  en la práctica real: set, isla de edición, sala de color, sonido, dirección
+  o estudio serio del lenguaje audiovisual") sin cerrar la puerta a talento sin
+  diploma. El campo de reel pasó de "opcional" a "recomendado" con hint. Se
+  agregó link cruzado a Aurum Academy.
+- **Numeración de escenas alineada**: los rótulos visibles (`ESC. XX`) y el
+  contador interno (`data-scene`) estaban desfasados desde la v4.0. Ahora
+  Process→04, Community→05, Promise→06, Apply→07, y el HUD muestra
+  `ESC XX / 07` consistentemente.
+- **Nav y Footer**: nuevos links a Aurum Academy.
+
+### Página nueva: Aurum Academy (`/academy/`)
+
+MPA (multi-page app) servida por el mismo build de Vite (`vite.config.js` con
+`rollupOptions.input` para `index.html` + `academy/index.html`). Comparte el
+mismo design system y efectos (Lenis, cursor de encuadre, grano, viñeta, polvo)
+con una atmósfera propia de reflectores de estreno (searchlights).
+
+- **Hero**: "El nuevo oficio de mirar." — título seductor para un público que
+  no conoce el mundo del data annotation, con la keyword técnica (evaluación
+  experta de video generativo / anotación especializada) en una keyline
+  discreta para valor de SEO/CV.
+- **AC. 01 — El programa**: las tres bobinas explicadas en detalle (Codex,
+  workflows, certificado verificable para LinkedIn/CV).
+- **AC. 02 — Cómo funciona**: filmstrip con perforaciones de 35mm, cuatro
+  frames (te anotás → cursás gratis → te certificás → entrás a la pool).
+- **AC. 03 — Primera certificación**: ticket de Workflow 01 (Preference
+  Evaluation) con sello **PRÓXIMAMENTE** y nota "el equipo está cargando el
+  proyector".
+- **AC. 04 — Función privada**: formulario de reserva de cupo (mailto), con
+  link cruzado de vuelta al casting de la landing principal.
+
+### Archivos nuevos
+
+- `src/components/Training.jsx` — sección ESC. 03
+- `src/academy/AcademyApp.jsx`, `src/academy/main.jsx` — app de la Academy
+- `academy/index.html` — entry point de la Academy
+- `scenes.md` — documento de referencia con todo el copy del sitio, por sección
+
+---
+
 ## Versión Final: Landing Page Completa
 
 ### 🏗️ Stack Técnico

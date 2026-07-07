@@ -4,10 +4,26 @@ import gsap from 'gsap'
 const CLIP_SECONDS = 12
 
 const ANNOTATIONS = [
-  { time: 2.46, text: '⚠ 00:02:11 — LA CARA DEL PERSONAJE NO ES LA DEL PLANO ANTERIOR' },
-  { time: 5.12, text: '⚠ 00:05:03 — TEMPERATURA DE COLOR SALTA DE 5600K A 3200K' },
-  { time: 7.79, text: '⚠ 00:07:19 — SALTO DE EJE: LA MIRADA CRUZA LA LÍNEA' },
-  { time: 9.5, text: '⚠ 00:09:12 — LA SOMBRA NO RESPONDE A NINGUNA FUENTE' },
+  {
+    time: 2.46,
+    craft: '⚠ 00:02:11 — LA CARA DEL PERSONAJE NO ES LA DEL PLANO ANTERIOR',
+    codex: 'IDENTITY DRIFT · SEV. CRÍTICA · CONF. 0.96',
+  },
+  {
+    time: 5.12,
+    craft: '⚠ 00:05:03 — TEMPERATURA DE COLOR SALTA DE 5600K A 3200K',
+    codex: 'COLOR CONTINUITY BREAK · SEV. MEDIA · CONF. 0.98',
+  },
+  {
+    time: 7.79,
+    craft: '⚠ 00:07:19 — SALTO DE EJE: LA MIRADA CRUZA LA LÍNEA',
+    codex: 'SPATIAL CONTINUITY ERROR · SEV. ALTA · CONF. 0.91',
+  },
+  {
+    time: 9.5,
+    craft: '⚠ 00:09:12 — LA SOMBRA NO RESPONDE A NINGUNA FUENTE',
+    codex: 'LIGHT SOURCE MISMATCH · SEV. ALTA · CONF. 0.87',
+  },
 ]
 
 const ROLES = [
@@ -64,6 +80,14 @@ export default function Mechanism({ reduced }) {
         ease: 'power3.out',
         scrollTrigger: { trigger: '.mech-after', start: 'top 80%' },
       })
+      gsap.from('.wf-head > *', {
+        autoAlpha: 0,
+        y: 40,
+        duration: 1,
+        stagger: 0.15,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.wf-head', start: 'top 80%' },
+      })
       gsap.from('.role', {
         autoAlpha: 0,
         y: 40,
@@ -72,6 +96,37 @@ export default function Mechanism({ reduced }) {
         ease: 'power3.out',
         scrollTrigger: { trigger: '.roles', start: 'top 82%' },
       })
+
+      const duelTl = gsap.timeline({
+        defaults: { ease: 'power2.out' },
+        scrollTrigger: {
+          trigger: '.duel',
+          start: 'top 82%',
+          end: 'top 18%',
+          scrub: 0.7,
+        },
+      })
+      duelTl
+        .from('.duel-take--a', { autoAlpha: 0, x: -46, duration: 0.6 })
+        .from('.duel-take--b', { autoAlpha: 0, x: 46, duration: 0.6 }, '<')
+        .from('.duel-vs', { autoAlpha: 0, scale: 0.55, duration: 0.3 }, '-=0.25')
+        .fromTo(
+          '.duel .take-flag',
+          { autoAlpha: 0, x: -18 },
+          { autoAlpha: 1, x: 0, duration: 0.4 },
+          '+=0.25'
+        )
+        .fromTo(
+          '.take-stamp',
+          { autoAlpha: 0, scale: 1.7, rotate: 3 },
+          { autoAlpha: 1, scale: 1, rotate: -5, duration: 0.35, ease: 'power4.in' },
+          '+=0.3'
+        )
+        .from(
+          '.duel-slip .slip-row',
+          { autoAlpha: 0, y: 12, stagger: 0.16, duration: 0.4 },
+          '+=0.25'
+        )
 
       const mm = gsap.matchMedia()
 
@@ -97,11 +152,18 @@ export default function Mechanism({ reduced }) {
           },
         })
         ANNOTATIONS.forEach((a, i) => {
+          const chip = `.annotations--overlay .annotation:nth-child(${i + 1})`
           tl.fromTo(
-            `.annotations--overlay .annotation:nth-child(${i + 1})`,
+            chip,
             { autoAlpha: 0, x: -26 },
             { autoAlpha: 1, x: 0, duration: 0.35, ease: 'power2.out' },
             a.time
+          )
+          tl.fromTo(
+            `${chip} .annotation-codex`,
+            { autoAlpha: 0, y: -5 },
+            { autoAlpha: 1, y: 0, duration: 0.3, ease: 'power2.out' },
+            a.time + 0.55
           )
         })
         tl.set('.shot-b', { autoAlpha: 1 }, 4.2)
@@ -128,6 +190,15 @@ export default function Mechanism({ reduced }) {
           x: -26,
           duration: 0.6,
           stagger: 0.5,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.viewer-wrap', start: 'top 55%' },
+        })
+        gsap.from('.annotations--log .annotation-codex', {
+          autoAlpha: 0,
+          y: -5,
+          duration: 0.45,
+          stagger: 0.5,
+          delay: 0.4,
           ease: 'power2.out',
           scrollTrigger: { trigger: '.viewer-wrap', start: 'top 55%' },
         })
@@ -199,8 +270,9 @@ export default function Mechanism({ reduced }) {
               <span className="reticle" />
               <div className="annotations annotations--overlay">
                 {ANNOTATIONS.map((a) => (
-                  <div className="annotation" key={a.text}>
-                    {a.text}
+                  <div className="annotation" key={a.craft}>
+                    {a.craft}
+                    <span className="annotation-codex">⤷ CODEX · {a.codex}</span>
                   </div>
                 ))}
               </div>
@@ -209,8 +281,9 @@ export default function Mechanism({ reduced }) {
           </div>
           <div className="annotations annotations--log">
             {ANNOTATIONS.map((a) => (
-              <div className="annotation" key={a.text}>
-                {a.text}
+              <div className="annotation" key={a.craft}>
+                {a.craft}
+                <span className="annotation-codex">⤷ CODEX · {a.codex}</span>
               </div>
             ))}
           </div>
@@ -218,7 +291,7 @@ export default function Mechanism({ reduced }) {
             <span>
               La máquina no lo vio. <span className="highlight">Vos, en dos segundos.</span>
             </span>
-            <span>JUICIO HUMANO REQUERIDO</span>
+            <span>OJO DE CINE → CODEX → DATO</span>
           </div>
         </div>
 
@@ -230,12 +303,68 @@ export default function Mechanism({ reduced }) {
             especializada— que nosotros hacemos con estándares de rodaje.
           </p>
           <p className="body-copy">
-            No es una encuesta ni una microtarea: es tu criterio profesional aplicado
-            plano por plano, con rúbricas claras y <strong>pago en dólares</strong>. La
-            doble formación —criterio de cine y rigor de anotación— es lo que los
-            laboratorios no consiguen en ningún otro lado. Acá se entrena, se practica
-            y se cobra.
+            Lo que ves con oficio se escribe en el <strong>Codex</strong> —el idioma de
+            Aurum— y se convierte en un dato que la máquina puede aprender. No es una
+            encuesta ni una microtarea: es tu criterio profesional aplicado plano por
+            plano, con rúbricas claras y <strong>pago en dólares</strong>.
           </p>
+        </div>
+
+        <div className="workflow">
+          <div className="wf-head">
+            <span className="label">WORKFLOW 01 · PREFERENCE EVALUATION · TU PRIMERA TAREA</span>
+            <h3>
+              Dos tomas entran. <em>Una sale.</em>
+            </h3>
+            <p className="body-copy">
+              Así de concreto: dos versiones del mismo plano, generadas por IA. Las
+              mirás, elegís cuál sostiene la escena y firmás por qué. No es opinar — es
+              mirar con oficio y traducirlo a una decisión con criterio, severidad y
+              motivo.
+            </p>
+          </div>
+
+          <div className="duel">
+            <div className="duel-takes">
+              <figure className="duel-take duel-take--a">
+                <span className="take-tag">TOMA A · CLIP_089</span>
+                <div className="take-scene">
+                  <span className="take-fig take-fig--ghost" />
+                </div>
+                <div className="take-flag">
+                  <div className="annotation">
+                    ⚠ LA CARA NO SOBREVIVE EL PANEO
+                    <span className="annotation-codex">
+                      ⤷ CODEX · TEMPORAL INCONSISTENCY · SEV. ALTA · CONF. 0.93
+                    </span>
+                  </div>
+                </div>
+              </figure>
+              <span className="duel-vs" aria-hidden="true">VS</span>
+              <figure className="duel-take duel-take--b">
+                <span className="take-tag">TOMA B · CLIP_089</span>
+                <div className="take-scene">
+                  <span className="take-fig" />
+                </div>
+                <div className="take-stamp">ELEGIDA</div>
+              </figure>
+            </div>
+            <div className="duel-slip">
+              <span className="slip-row slip-row--head">
+                HOJA DE EVALUACIÓN · WF-01 · CLIP_089 A/B
+              </span>
+              <span className="slip-row slip-row--main">
+                GANA TOMA B — CRITERIO: CONSISTENCIA TEMPORAL
+              </span>
+              <span className="slip-row">
+                NOTA: LA CARA DE A PIERDE IDENTIDAD DURANTE EL MOVIMIENTO DE CÁMARA. B
+                SOSTIENE PERSONAJE, LUZ Y PLANO.
+              </span>
+              <span className="slip-row slip-row--sign">
+                EVALUADOR/A: <em>VOS</em>
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="roles">

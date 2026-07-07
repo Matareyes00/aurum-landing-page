@@ -57,10 +57,10 @@ export default function Apply({ reduced }) {
   }
 
   return (
-    <section className="scene apply" id="aplicar" ref={root} data-scene="06">
+    <section className="scene apply" id="aplicar" ref={root} data-scene="07">
       <div className="container">
         <div className="scene-head">
-          <span className="scene-num">ESC. 06</span>
+          <span className="scene-num">ESC. 07</span>
           <span className="scene-name">Escena final — casting</span>
         </div>
         <div className="apply-frame">
@@ -74,13 +74,19 @@ export default function Apply({ reduced }) {
                 El casting está <em className="gold-text shimmer">abierto</em>.
               </h2>
               <p className="body-copy">
-                Contanos quién sos y qué mirás. No pedimos carta de presentación
-                perfecta: pedimos oficio, hambre y amor por la imagen. Te responde una
-                persona del equipo.
+                Contanos quién sos y qué mirás. Buscamos <strong>ojo formado en la
+                práctica real</strong> —set, isla de edición, sala de color, sonido,
+                dirección o estudio serio del lenguaje audiovisual—. Sin diplomas
+                perfectos: oficio, hambre y amor por la imagen. Te responde una persona
+                del equipo.
               </p>
               <p className="apply-mail">
                 También podés escribirnos directo:{' '}
                 <a href="mailto:hello@aurumvisual.com">hello@aurumvisual.com</a>
+              </p>
+              <p className="apply-mail">
+                ¿Querés entrenar tu ojo primero?{' '}
+                <a href="/academy/">Conocé Aurum Academy</a>
               </p>
             </div>
             <form className="form" onSubmit={submit}>
@@ -120,7 +126,7 @@ export default function Apply({ reduced }) {
                 />
               </div>
               <div className="field">
-                <label htmlFor="f-reel">Reel o portfolio (opcional)</label>
+                <label htmlFor="f-reel">Reel o muestra de trabajo (recomendado)</label>
                 <input
                   id="f-reel"
                   type="url"
@@ -128,6 +134,10 @@ export default function Apply({ reduced }) {
                   value={form.reel}
                   onChange={set('reel')}
                 />
+                <span className="field-hint">
+                  Una muestra de tu mirada hace avanzar tu aplicación mucho más rápido.
+                  Si no tenés reel armado, mandá lo que tengas.
+                </span>
               </div>
               <div className="field field--full">
                 <label htmlFor="f-mensaje">¿Qué te trajo hasta acá? (opcional)</label>

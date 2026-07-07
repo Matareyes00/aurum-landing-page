@@ -53,10 +53,10 @@ export default function PromiseScene({ reduced }) {
   }, [reduced])
 
   return (
-    <section className="scene promise" ref={root} data-scene="05">
+    <section className="scene promise" ref={root} data-scene="06">
       <div className="container">
         <div className="scene-head">
-          <span className="scene-num">ESC. 05</span>
+          <span className="scene-num">ESC. 06</span>
           <span className="scene-name">La promesa</span>
         </div>
         <h2>

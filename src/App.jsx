@@ -13,6 +13,7 @@ import Hero from './components/Hero'
 import Tension from './components/Tension'
 import Marquee from './components/Marquee'
 import Mechanism from './components/Mechanism'
+import Training from './components/Training'
 import Process from './components/Process'
 import Community from './components/Community'
 import PromiseScene from './components/Promise'
@@ -144,6 +145,7 @@ export default function App() {
         <Tension reduced={prefersReduced} />
         <Marquee />
         <Mechanism reduced={prefersReduced} />
+        <Training reduced={prefersReduced} />
         <Process reduced={prefersReduced} />
         <Community reduced={prefersReduced} />
         <PromiseScene reduced={prefersReduced} />
