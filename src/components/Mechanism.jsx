@@ -4,51 +4,220 @@ import { useCopy } from '../i18n'
 
 const CLIP_SECONDS = 12
 
-const ANNOTATIONS = [
-  {
-    time: 2.46,
-    craft: '⚠ 00:02:11 — LA CARA DEL PERSONAJE NO ES LA DEL PLANO ANTERIOR',
-    codex: 'IDENTITY DRIFT · SEV. CRÍTICA · CONF. 0.96',
-  },
-  {
-    time: 5.12,
-    craft: '⚠ 00:05:03 — TEMPERATURA DE COLOR SALTA DE 5600K A 3200K',
-    codex: 'COLOR CONTINUITY BREAK · SEV. MEDIA · CONF. 0.98',
-  },
-  {
-    time: 7.79,
-    craft: '⚠ 00:07:19 — SALTO DE EJE: LA MIRADA CRUZA LA LÍNEA',
-    codex: 'SPATIAL CONTINUITY ERROR · SEV. ALTA · CONF. 0.91',
-  },
-  {
-    time: 9.5,
-    craft: '⚠ 00:09:12 — LA SOMBRA NO RESPONDE A NINGUNA FUENTE',
-    codex: 'LIGHT SOURCE MISMATCH · SEV. ALTA · CONF. 0.87',
-  },
-]
+const ANNOT_TIMES = [2.46, 5.12, 7.79, 9.5]
 
-const ROLES = [
-  {
-    num: 'CAM A',
-    title: 'Fotografía',
-    desc: 'Luz sin fuente, ópticas que mienten, continuidad lumínica que se rompe entre planos.',
+const COPY = {
+  es: {
+    sceneName: 'El trabajo',
+    hint: 'Seguí scrolleando',
+    leadH2: (
+      <>
+        La IA ya genera video. Todavía no sabe si <em>está bien</em>.
+      </>
+    ),
+    leadBody: (
+      <>
+        Un modelo puede producir mil planos por hora. No puede decirte si la cara del
+        personaje cambió entre tomas, si la luz rompe la continuidad, si la escena
+        respira o se cae. Eso lo da el oficio: años de set, de isla de edición y de sala
+        oscura. <strong>Vos lo traés puesto.</strong>
+      </>
+    ),
+    verdict: 'RECHAZADO',
+    captionA: (
+      <>
+        La máquina no lo vio. <span className="highlight">Vos, en dos segundos.</span>
+      </>
+    ),
+    captionB: 'OJO DE CINE → CODEX → DATO',
+    afterP1: (
+      <>
+        Los laboratorios de IA más grandes del mundo necesitan ese veredicto para
+        entrenar sus modelos. Se llama{' '}
+        <strong>evaluación experta de video generativo</strong>: un oficio real y
+        demandado —anotación de datos especializada— que nosotros hacemos con estándares
+        de rodaje.
+      </>
+    ),
+    afterP2: (
+      <>
+        Lo que ves con oficio se escribe en el <strong>Codex</strong> —el idioma de
+        Aurum— y se convierte en un dato que la máquina puede aprender. No es una encuesta
+        ni una microtarea: es tu criterio profesional aplicado plano por plano, con
+        rúbricas claras y <strong>pago en dólares</strong>.
+      </>
+    ),
+    wfLabel: 'WORKFLOW 01 · PREFERENCE EVALUATION · TU PRIMERA TAREA',
+    wfH3: (
+      <>
+        Dos tomas entran. <em>Una sale.</em>
+      </>
+    ),
+    wfBody: (
+      <>
+        Así de concreto: dos versiones del mismo plano, generadas por IA. Las mirás,
+        elegís cuál sostiene la escena y firmás por qué. No es opinar — es mirar con
+        oficio y traducirlo a una decisión con criterio, severidad y motivo.
+      </>
+    ),
+    takeATag: 'TOMA A · CLIP_089',
+    takeAFlag: '⚠ LA CARA NO SOBREVIVE EL PANEO',
+    takeAFlagCodex: '⤷ CODEX · TEMPORAL INCONSISTENCY · SEV. ALTA · CONF. 0.93',
+    takeBTag: 'TOMA B · CLIP_089',
+    stamp: 'ELEGIDA',
+    slipHead: 'HOJA DE EVALUACIÓN · WF-01 · CLIP_089 A/B',
+    slipMain: 'GANA TOMA B — CRITERIO: CONSISTENCIA TEMPORAL',
+    slipNote:
+      'NOTA: LA CARA DE A PIERDE IDENTIDAD DURANTE EL MOVIMIENTO DE CÁMARA. B SOSTIENE PERSONAJE, LUZ Y PLANO.',
+    slipSignA: 'EVALUADOR/A: ',
+    slipSignB: 'VOS',
+    annotations: [
+      {
+        craft: '⚠ 00:02:11 — LA CARA DEL PERSONAJE NO ES LA DEL PLANO ANTERIOR',
+        codex: 'IDENTITY DRIFT · SEV. CRÍTICA · CONF. 0.96',
+      },
+      {
+        craft: '⚠ 00:05:03 — TEMPERATURA DE COLOR SALTA DE 5600K A 3200K',
+        codex: 'COLOR CONTINUITY BREAK · SEV. MEDIA · CONF. 0.98',
+      },
+      {
+        craft: '⚠ 00:07:19 — SALTO DE EJE: LA MIRADA CRUZA LA LÍNEA',
+        codex: 'SPATIAL CONTINUITY ERROR · SEV. ALTA · CONF. 0.91',
+      },
+      {
+        craft: '⚠ 00:09:12 — LA SOMBRA NO RESPONDE A NINGUNA FUENTE',
+        codex: 'LIGHT SOURCE MISMATCH · SEV. ALTA · CONF. 0.87',
+      },
+    ],
+    roles: [
+      {
+        num: 'CAM A',
+        title: 'Fotografía',
+        desc: 'Luz sin fuente, ópticas que mienten, continuidad lumínica que se rompe entre planos.',
+      },
+      {
+        num: 'CAM B',
+        title: 'Montaje',
+        desc: 'Ritmo, raccord, ejes. El corte que se siente mal antes de poder explicarse.',
+      },
+      {
+        num: 'CAM C',
+        title: 'Color',
+        desc: 'Pieles imposibles, paletas que se quiebran, grados que delatan a la máquina.',
+      },
+      {
+        num: 'CAM D',
+        title: 'Sonido',
+        desc: 'Salas que no existen, mezclas sin espacio, foley fantasma fuera de cuadro.',
+      },
+    ],
   },
-  {
-    num: 'CAM B',
-    title: 'Montaje',
-    desc: 'Ritmo, raccord, ejes. El corte que se siente mal antes de poder explicarse.',
+  en: {
+    sceneName: 'The work',
+    hint: 'Keep scrolling',
+    leadH2: (
+      <>
+        AI already generates video. It still doesn’t know if it’s <em>any good</em>.
+      </>
+    ),
+    leadBody: (
+      <>
+        A model can produce a thousand shots an hour. It can’t tell you if the
+        character’s face changed between takes, if the light breaks continuity, if the
+        scene breathes or falls apart. That comes from the craft: years on set, in the
+        edit bay and the dark room. <strong>You carry it with you.</strong>
+      </>
+    ),
+    verdict: 'REJECTED',
+    captionA: (
+      <>
+        The machine didn’t see it.{' '}
+        <span className="highlight">You did, in two seconds.</span>
+      </>
+    ),
+    captionB: 'FILM EYE → CODEX → DATA',
+    afterP1: (
+      <>
+        The world’s largest AI labs need that verdict to train their models. It’s called{' '}
+        <strong>expert generative-video evaluation</strong>: a real, in-demand craft
+        —specialized data annotation— that we do to filmmaking standards.
+      </>
+    ),
+    afterP2: (
+      <>
+        What you see with craft is written into the <strong>Codex</strong> —Aurum’s
+        language— and becomes data the machine can learn from. It’s not a survey or a
+        microtask: it’s your professional judgment applied shot by shot, with clear
+        rubrics and <strong>payment in dollars</strong>.
+      </>
+    ),
+    wfLabel: 'WORKFLOW 01 · PREFERENCE EVALUATION · YOUR FIRST TASK',
+    wfH3: (
+      <>
+        Two takes go in. <em>One comes out.</em>
+      </>
+    ),
+    wfBody: (
+      <>
+        This concrete: two versions of the same shot, AI-generated. You watch them,
+        choose which one holds the scene and sign off on why. It’s not opinion — it’s
+        watching with craft and translating it into a decision with judgment, severity
+        and reason.
+      </>
+    ),
+    takeATag: 'TAKE A · CLIP_089',
+    takeAFlag: '⚠ THE FACE DOESN’T SURVIVE THE PAN',
+    takeAFlagCodex: '⤷ CODEX · TEMPORAL INCONSISTENCY · SEV. HIGH · CONF. 0.93',
+    takeBTag: 'TAKE B · CLIP_089',
+    stamp: 'CHOSEN',
+    slipHead: 'EVALUATION SHEET · WF-01 · CLIP_089 A/B',
+    slipMain: 'TAKE B WINS — CRITERION: TEMPORAL CONSISTENCY',
+    slipNote:
+      'NOTE: A’S FACE LOSES IDENTITY DURING THE CAMERA MOVE. B HOLDS CHARACTER, LIGHT AND FRAME.',
+    slipSignA: 'EVALUATOR: ',
+    slipSignB: 'YOU',
+    annotations: [
+      {
+        craft: '⚠ 00:02:11 — THE CHARACTER’S FACE ISN’T THE ONE FROM THE PREVIOUS SHOT',
+        codex: 'IDENTITY DRIFT · SEV. CRITICAL · CONF. 0.96',
+      },
+      {
+        craft: '⚠ 00:05:03 — COLOR TEMPERATURE JUMPS FROM 5600K TO 3200K',
+        codex: 'COLOR CONTINUITY BREAK · SEV. MEDIUM · CONF. 0.98',
+      },
+      {
+        craft: '⚠ 00:07:19 — AXIS BREAK: THE GAZE CROSSES THE LINE',
+        codex: 'SPATIAL CONTINUITY ERROR · SEV. HIGH · CONF. 0.91',
+      },
+      {
+        craft: '⚠ 00:09:12 — THE SHADOW ANSWERS TO NO SOURCE',
+        codex: 'LIGHT SOURCE MISMATCH · SEV. HIGH · CONF. 0.87',
+      },
+    ],
+    roles: [
+      {
+        num: 'CAM A',
+        title: 'Cinematography',
+        desc: 'Sourceless light, lenses that lie, lighting continuity that breaks between shots.',
+      },
+      {
+        num: 'CAM B',
+        title: 'Editing',
+        desc: 'Rhythm, continuity, axes. The cut that feels wrong before it can be explained.',
+      },
+      {
+        num: 'CAM C',
+        title: 'Color',
+        desc: 'Impossible skins, palettes that crack, grades that give the machine away.',
+      },
+      {
+        num: 'CAM D',
+        title: 'Sound',
+        desc: 'Rooms that don’t exist, mixes with no space, ghost foley off-frame.',
+      },
+    ],
   },
-  {
-    num: 'CAM C',
-    title: 'Color',
-    desc: 'Pieles imposibles, paletas que se quiebran, grados que delatan a la máquina.',
-  },
-  {
-    num: 'CAM D',
-    title: 'Sonido',
-    desc: 'Salas que no existen, mezclas sin espacio, foley fantasma fuera de cuadro.',
-  },
-]
+}
 
 const fmtTC = (seconds) => {
   const total = Math.max(0, Math.min(CLIP_SECONDS, seconds))
@@ -62,8 +231,7 @@ export default function Mechanism({ reduced }) {
   const root = useRef(null)
   const tcRef = useRef(null)
   const hintRef = useRef(null)
-  const hintCopy = useCopy({ es: 'Seguí scrolleando', en: 'Keep scrolling' })
-  const sceneName = useCopy({ es: 'El trabajo', en: 'The work' })
+  const t = useCopy(COPY)
 
   useLayoutEffect(() => {
     if (reduced) return
@@ -159,19 +327,19 @@ export default function Mechanism({ reduced }) {
             },
           },
         })
-        ANNOTATIONS.forEach((a, i) => {
+        ANNOT_TIMES.forEach((time, i) => {
           const chip = `.annotations--overlay .annotation:nth-child(${i + 1})`
           tl.fromTo(
             chip,
             { autoAlpha: 0, x: -26 },
             { autoAlpha: 1, x: 0, duration: 0.35, ease: 'power2.out' },
-            a.time
+            time
           )
           tl.fromTo(
             `${chip} .annotation-codex`,
             { autoAlpha: 0, y: -5 },
             { autoAlpha: 1, y: 0, duration: 0.3, ease: 'power2.out' },
-            a.time + 0.55
+            time + 0.55
           )
         })
         tl.set('.shot-b', { autoAlpha: 1 }, 4.2)
@@ -244,19 +412,12 @@ export default function Mechanism({ reduced }) {
       <div className="container">
         <div className="scene-head">
           <span className="scene-num">ESC. 02</span>
-          <span className="scene-name">{sceneName}</span>
+          <span className="scene-name">{t.sceneName}</span>
         </div>
 
         <div className="mech-lead">
-          <h2>
-            La IA ya genera video. Todavía no sabe si <em>está bien</em>.
-          </h2>
-          <p className="body-copy">
-            Un modelo puede producir mil planos por hora. No puede decirte si la cara del
-            personaje cambió entre tomas, si la luz rompe la continuidad, si la escena
-            respira o se cae. Eso lo da el oficio: años de set, de isla de edición y de
-            sala oscura. <strong>Vos lo traés puesto.</strong>
-          </p>
+          <h2>{t.leadH2}</h2>
+          <p className="body-copy">{t.leadBody}</p>
         </div>
 
         <div className="viewer-wrap">
@@ -277,109 +438,81 @@ export default function Mechanism({ reduced }) {
               </div>
               <span className="reticle" />
               <div className="annotations annotations--overlay">
-                {ANNOTATIONS.map((a) => (
-                  <div className="annotation" key={a.craft}>
+                {t.annotations.map((a, i) => (
+                  <div className="annotation" key={i}>
                     {a.craft}
                     <span className="annotation-codex">⤷ CODEX · {a.codex}</span>
                   </div>
                 ))}
               </div>
-              <div className="verdict">RECHAZADO</div>
+              <div className="verdict">{t.verdict}</div>
             </div>
             <div className="viewer-hint" ref={hintRef} aria-hidden="true">
-              {hintCopy} <span className="viewer-hint-arrow">↓</span>
+              {t.hint} <span className="viewer-hint-arrow">↓</span>
             </div>
           </div>
           <div className="annotations annotations--log">
-            {ANNOTATIONS.map((a) => (
-              <div className="annotation" key={a.craft}>
+            {t.annotations.map((a, i) => (
+              <div className="annotation" key={i}>
                 {a.craft}
                 <span className="annotation-codex">⤷ CODEX · {a.codex}</span>
               </div>
             ))}
           </div>
           <div className="viewer-caption">
-            <span>
-              La máquina no lo vio. <span className="highlight">Vos, en dos segundos.</span>
-            </span>
-            <span>OJO DE CINE → CODEX → DATO</span>
+            <span>{t.captionA}</span>
+            <span>{t.captionB}</span>
           </div>
         </div>
 
         <div className="mech-after">
-          <p className="body-copy">
-            Los laboratorios de IA más grandes del mundo necesitan ese veredicto para
-            entrenar sus modelos. Se llama <strong>evaluación experta de video
-            generativo</strong>: un oficio real y demandado —anotación de datos
-            especializada— que nosotros hacemos con estándares de rodaje.
-          </p>
-          <p className="body-copy">
-            Lo que ves con oficio se escribe en el <strong>Codex</strong> —el idioma de
-            Aurum— y se convierte en un dato que la máquina puede aprender. No es una
-            encuesta ni una microtarea: es tu criterio profesional aplicado plano por
-            plano, con rúbricas claras y <strong>pago en dólares</strong>.
-          </p>
+          <p className="body-copy">{t.afterP1}</p>
+          <p className="body-copy">{t.afterP2}</p>
         </div>
 
         <div className="workflow">
           <div className="wf-head">
-            <span className="label">WORKFLOW 01 · PREFERENCE EVALUATION · TU PRIMERA TAREA</span>
-            <h3>
-              Dos tomas entran. <em>Una sale.</em>
-            </h3>
-            <p className="body-copy">
-              Así de concreto: dos versiones del mismo plano, generadas por IA. Las
-              mirás, elegís cuál sostiene la escena y firmás por qué. No es opinar — es
-              mirar con oficio y traducirlo a una decisión con criterio, severidad y
-              motivo.
-            </p>
+            <span className="label">{t.wfLabel}</span>
+            <h3>{t.wfH3}</h3>
+            <p className="body-copy">{t.wfBody}</p>
           </div>
 
           <div className="duel">
             <div className="duel-takes">
               <figure className="duel-take duel-take--a">
-                <span className="take-tag">TOMA A · CLIP_089</span>
+                <span className="take-tag">{t.takeATag}</span>
                 <div className="take-scene">
                   <span className="take-fig take-fig--ghost" />
                 </div>
                 <div className="take-flag">
                   <div className="annotation">
-                    ⚠ LA CARA NO SOBREVIVE EL PANEO
-                    <span className="annotation-codex">
-                      ⤷ CODEX · TEMPORAL INCONSISTENCY · SEV. ALTA · CONF. 0.93
-                    </span>
+                    {t.takeAFlag}
+                    <span className="annotation-codex">{t.takeAFlagCodex}</span>
                   </div>
                 </div>
               </figure>
               <span className="duel-vs" aria-hidden="true">VS</span>
               <figure className="duel-take duel-take--b">
-                <span className="take-tag">TOMA B · CLIP_089</span>
+                <span className="take-tag">{t.takeBTag}</span>
                 <div className="take-scene">
                   <span className="take-fig" />
                 </div>
-                <div className="take-stamp">ELEGIDA</div>
+                <div className="take-stamp">{t.stamp}</div>
               </figure>
             </div>
             <div className="duel-slip">
-              <span className="slip-row slip-row--head">
-                HOJA DE EVALUACIÓN · WF-01 · CLIP_089 A/B
-              </span>
-              <span className="slip-row slip-row--main">
-                GANA TOMA B — CRITERIO: CONSISTENCIA TEMPORAL
-              </span>
-              <span className="slip-row">
-                NOTA: LA CARA DE A PIERDE IDENTIDAD DURANTE EL MOVIMIENTO DE CÁMARA. B
-                SOSTIENE PERSONAJE, LUZ Y PLANO.
-              </span>
+              <span className="slip-row slip-row--head">{t.slipHead}</span>
+              <span className="slip-row slip-row--main">{t.slipMain}</span>
+              <span className="slip-row">{t.slipNote}</span>
               <span className="slip-row slip-row--sign">
-                EVALUADOR/A: <em>VOS</em>
+                {t.slipSignA}<em>{t.slipSignB}</em>
               </span>
             </div>
           </div>
         </div>
 
         <div className="roles">
-          {ROLES.map((r) => (
+          {t.roles.map((r) => (
             <div className="role" key={r.title} onMouseMove={glint}>
               <span className="role-num">{r.num}</span>
               <h3>{r.title}</h3>

@@ -2,27 +2,72 @@ import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { useCopy } from '../i18n'
 
-const ITEMS = [
-  {
-    tag: 'FARO',
-    title: 'Referentes cerca',
-    desc: 'Directores de foto, editores y coloristas de trayectoria que ya recorrieron el camino que estás empezando — y responden, sin escenario de por medio.',
+const COPY = {
+  es: {
+    sceneName: 'La comunidad',
+    line1: 'No es una plataforma.',
+    line2a: 'Es una ',
+    line2em: 'casa de cine',
+    body: (
+      <>
+        Nadie evalúa solo. Detrás de cada plano hay foros que arden con la película del
+        momento, mesas de crítica, y referentes de la industria que sirven de faro para
+        quienes recién empiezan.
+      </>
+    ),
+    items: [
+      {
+        tag: 'FARO',
+        title: 'Referentes cerca',
+        desc: 'Directores de foto, editores y coloristas de trayectoria que ya recorrieron el camino que estás empezando — y responden, sin escenario de por medio.',
+      },
+      {
+        tag: 'FORO',
+        title: 'Conversación de oficio',
+        desc: 'Del etalonaje de esa serie al lente de aquel plano. La película del momento, discutida por gente que la mira cuadro a cuadro.',
+      },
+      {
+        tag: 'MESA',
+        title: 'Crítica entre pares',
+        desc: 'El criterio se entrena mirando y se agudiza discutiendo. Mesas de crítica donde tu lectura de un plano crece con la de los demás.',
+      },
+    ],
   },
-  {
-    tag: 'FORO',
-    title: 'Conversación de oficio',
-    desc: 'Del etalonaje de esa serie al lente de aquel plano. La película del momento, discutida por gente que la mira cuadro a cuadro.',
+  en: {
+    sceneName: 'The community',
+    line1: 'It’s not a platform.',
+    line2a: 'It’s a ',
+    line2em: 'house of cinema',
+    body: (
+      <>
+        Nobody evaluates alone. Behind every shot there are forums blazing about the film
+        of the moment, critique tables, and industry mentors who act as a beacon for
+        those just starting out.
+      </>
+    ),
+    items: [
+      {
+        tag: 'BEACON',
+        title: 'Mentors nearby',
+        desc: 'Cinematographers, editors and colorists with real careers who already walked the path you’re starting — and answer, with no stage in between.',
+      },
+      {
+        tag: 'FORUM',
+        title: 'Shop talk',
+        desc: 'From the grade on that series to the lens on that shot. The film of the moment, discussed by people who watch it frame by frame.',
+      },
+      {
+        tag: 'TABLE',
+        title: 'Peer critique',
+        desc: 'Judgment is trained by watching and sharpened by arguing. Critique tables where your read of a shot grows with everyone else’s.',
+      },
+    ],
   },
-  {
-    tag: 'MESA',
-    title: 'Crítica entre pares',
-    desc: 'El criterio se entrena mirando y se agudiza discutiendo. Mesas de crítica donde tu lectura de un plano crece con la de los demás.',
-  },
-]
+}
 
 export default function Community({ reduced }) {
   const root = useRef(null)
-  const sceneName = useCopy({ es: 'La comunidad', en: 'The community' })
+  const t = useCopy(COPY)
 
   useLayoutEffect(() => {
     if (reduced) return
@@ -64,25 +109,21 @@ export default function Community({ reduced }) {
       <div className="container">
         <div className="scene-head">
           <span className="scene-num">ESC. 05</span>
-          <span className="scene-name">{sceneName}</span>
+          <span className="scene-name">{t.sceneName}</span>
         </div>
         <h2>
           <span className="line">
-            <span className="line-inner">No es una plataforma.</span>
+            <span className="line-inner">{t.line1}</span>
           </span>
           <span className="line">
             <span className="line-inner">
-              Es una <em className="gold-text shimmer">casa de cine</em>.
+              {t.line2a}<em className="gold-text shimmer">{t.line2em}</em>.
             </span>
           </span>
         </h2>
-        <p className="body-copy">
-          Nadie evalúa solo. Detrás de cada plano hay foros que arden con la película del
-          momento, mesas de crítica, y referentes de la industria que sirven de faro para
-          quienes recién empiezan.
-        </p>
+        <p className="body-copy">{t.body}</p>
         <div className="community-items">
-          {ITEMS.map((item) => (
+          {t.items.map((item) => (
             <div className="community-item" key={item.title} onMouseMove={glint}>
               <span className="label">{item.tag}</span>
               <h3>{item.title}</h3>

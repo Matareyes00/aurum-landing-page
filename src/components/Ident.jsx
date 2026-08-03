@@ -1,11 +1,13 @@
 import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
+import { useCopy } from '../i18n'
 
 const SEEN_KEY = 'aurum-ident-seen'
 
 export default function Ident({ onReveal, onDone, reduced }) {
   const root = useRef(null)
   const tl = useRef(null)
+  const presents = useCopy({ es: 'PRESENTA', en: 'PRESENTS' })
 
   useLayoutEffect(() => {
     if (reduced) {
@@ -116,7 +118,7 @@ export default function Ident({ onReveal, onDone, reduced }) {
       <div className="ident-core">
         <img className="ident-symbol" src="/symbol-small.png" alt="" />
         <img className="ident-word" src="/aurum-visual-word.png" alt="Aurum Visual" />
-        <div className="ident-sub">PRESENTA</div>
+        <div className="ident-sub">{presents}</div>
       </div>
       <div className="ident-flicker" />
     </div>

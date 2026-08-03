@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { setEnabled, sceneClick } from '../fx/sound'
+import { useCopy } from '../i18n'
 
 const TOTAL_FRAMES = 24 * 60 * 2.4
 
@@ -21,6 +22,10 @@ export default function Hud({ visible }) {
   const firstScene = useRef(true)
   const [scene, setScene] = useState('01')
   const [sala, setSala] = useState(false)
+  const t = useCopy({
+    es: { room: 'SALA', roomAria: 'Sonido de sala' },
+    en: { room: 'ROOM', roomAria: 'Room sound' },
+  })
 
   useEffect(() => {
     let raf = null
@@ -79,9 +84,9 @@ export default function Hud({ visible }) {
           className={`hud-sala ${sala ? 'is-on' : ''}`}
           onClick={toggleSala}
           aria-pressed={sala}
-          aria-label="Sonido de sala"
+          aria-label={t.roomAria}
         >
-          SALA {sala ? '●' : '○'}
+          {t.room} {sala ? '●' : '○'}
         </button>
       </div>
     </div>

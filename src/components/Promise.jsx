@@ -2,21 +2,62 @@ import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { useCopy } from '../i18n'
 
-const CREDITS = [
-  { role: 'Guión', name: 'Vos' },
-  { role: 'Dirección', name: 'Vos' },
-  { role: 'Fotografía', name: 'Vos y los tuyos' },
-  { role: 'Montaje', name: 'Vos' },
-  { role: 'Color', name: 'Vos' },
-  { role: 'Sonido', name: 'Vos' },
-  { role: 'Financiación', name: 'Tu ojo', gold: true },
-]
+const COPY = {
+  es: {
+    sceneName: 'La promesa',
+    line1: 'Nuestra escena soñada',
+    line2a: 'no sale acá. Sale en ',
+    line2em: 'tus créditos',
+    creditsTitle: 'TU PRÓXIMA PELÍCULA',
+    creditsSub: 'FICHA TÉCNICA',
+    credits: [
+      { role: 'Guión', name: 'Vos' },
+      { role: 'Dirección', name: 'Vos' },
+      { role: 'Fotografía', name: 'Vos y los tuyos' },
+      { role: 'Montaje', name: 'Vos' },
+      { role: 'Color', name: 'Vos' },
+      { role: 'Sonido', name: 'Vos' },
+      { role: 'Financiación', name: 'Tu ojo', gold: true },
+    ],
+    close: (
+      <>
+        Cada hora que evaluás acá es una luz que alquilás, un día de rodaje que asegurás,
+        una escena que filmás. Que cuando cuentes cómo la hiciste,{' '}
+        <strong>Aurum sea parte de la respuesta</strong>.
+      </>
+    ),
+  },
+  en: {
+    sceneName: 'The promise',
+    line1: 'Our dream scene',
+    line2a: 'doesn’t play here. It plays in ',
+    line2em: 'your credits',
+    creditsTitle: 'YOUR NEXT FILM',
+    creditsSub: 'CREW',
+    credits: [
+      { role: 'Writing', name: 'You' },
+      { role: 'Directing', name: 'You' },
+      { role: 'Cinematography', name: 'You and yours' },
+      { role: 'Editing', name: 'You' },
+      { role: 'Color', name: 'You' },
+      { role: 'Sound', name: 'You' },
+      { role: 'Financing', name: 'Your eye', gold: true },
+    ],
+    close: (
+      <>
+        Every hour you evaluate here is a light you rent, a shoot day you lock, a scene
+        you film. So that when you tell how you made it,{' '}
+        <strong>Aurum is part of the answer</strong>.
+      </>
+    ),
+  },
+}
 
 export default function PromiseScene({ reduced }) {
   const root = useRef(null)
   const viewport = useRef(null)
   const roll = useRef(null)
-  const sceneName = useCopy({ es: 'La promesa', en: 'The promise' })
+  const t = useCopy(COPY)
 
   useLayoutEffect(() => {
     if (reduced) return
@@ -59,24 +100,24 @@ export default function PromiseScene({ reduced }) {
       <div className="container">
         <div className="scene-head">
           <span className="scene-num">ESC. 06</span>
-          <span className="scene-name">{sceneName}</span>
+          <span className="scene-name">{t.sceneName}</span>
         </div>
         <h2>
           <span className="line">
-            <span className="line-inner">Nuestra escena soñada</span>
+            <span className="line-inner">{t.line1}</span>
           </span>
           <span className="line">
             <span className="line-inner">
-              no sale acá. Sale en <em className="gold-text shimmer">tus créditos</em>.
+              {t.line2a}<em className="gold-text shimmer">{t.line2em}</em>.
             </span>
           </span>
         </h2>
         <div className="credits">
           <div className="credits-viewport" ref={viewport}>
             <div className="credits-roll" ref={roll}>
-              <div className="credits-title">TU PRÓXIMA PELÍCULA</div>
-              <div className="credits-sub">FICHA TÉCNICA</div>
-              {CREDITS.map((c) => (
+              <div className="credits-title">{t.creditsTitle}</div>
+              <div className="credits-sub">{t.creditsSub}</div>
+              {t.credits.map((c) => (
                 <div
                   className={`credit-row ${c.gold ? 'credit-row--gold' : ''}`}
                   key={c.role}
@@ -88,11 +129,7 @@ export default function PromiseScene({ reduced }) {
             </div>
           </div>
         </div>
-        <p className="promise-close">
-          Cada hora que evaluás acá es una luz que alquilás, un día de rodaje que
-          asegurás, una escena que filmás. Que cuando cuentes cómo la hiciste,{' '}
-          <strong>Aurum sea parte de la respuesta</strong>.
-        </p>
+        <p className="promise-close">{t.close}</p>
       </div>
     </section>
   )
