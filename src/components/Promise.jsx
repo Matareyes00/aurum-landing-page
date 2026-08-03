@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
+import { useCopy } from '../i18n'
 
 const CREDITS = [
   { role: 'Guión', name: 'Vos' },
@@ -15,6 +16,7 @@ export default function PromiseScene({ reduced }) {
   const root = useRef(null)
   const viewport = useRef(null)
   const roll = useRef(null)
+  const sceneName = useCopy({ es: 'La promesa', en: 'The promise' })
 
   useLayoutEffect(() => {
     if (reduced) return
@@ -53,11 +55,11 @@ export default function PromiseScene({ reduced }) {
   }, [reduced])
 
   return (
-    <section className="scene promise" ref={root} data-scene="06">
+    <section className="scene promise" id="promesa" ref={root} data-scene="06">
       <div className="container">
         <div className="scene-head">
           <span className="scene-num">ESC. 06</span>
-          <span className="scene-name">La promesa</span>
+          <span className="scene-name">{sceneName}</span>
         </div>
         <h2>
           <span className="line">

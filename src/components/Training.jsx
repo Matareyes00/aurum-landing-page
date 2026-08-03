@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
+import { useCopy } from '../i18n'
 
 const EXAMPLES = [
   {
@@ -43,6 +44,7 @@ const BOBINAS = [
 export default function Training({ reduced }) {
   const root = useRef(null)
   const [idx, setIdx] = useState(0)
+  const sceneName = useCopy({ es: 'El entrenamiento', en: 'The training' })
 
   useLayoutEffect(() => {
     if (reduced) return
@@ -120,7 +122,7 @@ export default function Training({ reduced }) {
       <div className="container">
         <div className="scene-head">
           <span className="scene-num">ESC. 03</span>
-          <span className="scene-name">El entrenamiento</span>
+          <span className="scene-name">{sceneName}</span>
         </div>
         <h2>
           <span className="line">

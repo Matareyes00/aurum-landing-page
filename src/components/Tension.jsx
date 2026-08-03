@@ -1,8 +1,10 @@
 import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
+import { useCopy } from '../i18n'
 
 export default function Tension({ reduced }) {
   const root = useRef(null)
+  const sceneName = useCopy({ es: 'La escena que conocés', en: 'The scene you know' })
 
   useLayoutEffect(() => {
     if (reduced) return
@@ -46,7 +48,7 @@ export default function Tension({ reduced }) {
       <div className="container">
         <div className="scene-head">
           <span className="scene-num">ESC. 01</span>
-          <span className="scene-name">La escena que conocés</span>
+          <span className="scene-name">{sceneName}</span>
         </div>
         <div className="tension-grid">
           <div className="screenplay">

@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
+import { useCopy } from '../i18n'
 
 const CLIP_SECONDS = 12
 
@@ -60,6 +61,9 @@ const fmtTC = (seconds) => {
 export default function Mechanism({ reduced }) {
   const root = useRef(null)
   const tcRef = useRef(null)
+  const hintRef = useRef(null)
+  const hintCopy = useCopy({ es: 'Seguí scrolleando', en: 'Keep scrolling' })
+  const sceneName = useCopy({ es: 'El trabajo', en: 'The work' })
 
   useLayoutEffect(() => {
     if (reduced) return
@@ -148,6 +152,10 @@ export default function Mechanism({ reduced }) {
             onUpdate: (self) => {
               if (tcRef.current)
                 tcRef.current.textContent = fmtTC(self.progress * CLIP_SECONDS)
+              if (hintRef.current)
+                hintRef.current.style.opacity = String(
+                  Math.max(0, 1 - self.progress * 6)
+                )
             },
           },
         })
@@ -236,7 +244,7 @@ export default function Mechanism({ reduced }) {
       <div className="container">
         <div className="scene-head">
           <span className="scene-num">ESC. 02</span>
-          <span className="scene-name">El trabajo</span>
+          <span className="scene-name">{sceneName}</span>
         </div>
 
         <div className="mech-lead">
@@ -277,6 +285,9 @@ export default function Mechanism({ reduced }) {
                 ))}
               </div>
               <div className="verdict">RECHAZADO</div>
+            </div>
+            <div className="viewer-hint" ref={hintRef} aria-hidden="true">
+              {hintCopy} <span className="viewer-hint-arrow">↓</span>
             </div>
           </div>
           <div className="annotations annotations--log">

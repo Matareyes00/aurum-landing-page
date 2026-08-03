@@ -5,6 +5,8 @@ import Lenis from 'lenis'
 import Ident from './components/Ident'
 import Nav from './components/Nav'
 import Hud from './components/Hud'
+import ScrollRail from './components/ScrollRail'
+import { useLang } from './i18n'
 import CursorFrame from './fx/CursorFrame'
 import Letterbox from './fx/Letterbox'
 import LightSweep from './fx/LightSweep'
@@ -34,6 +36,7 @@ export default function App() {
   const [identDone, setIdentDone] = useState(skipIntro)
   const lenisRef = useRef(null)
   const lightRef = useRef(null)
+  const lang = useLang()
 
   useEffect(() => {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
@@ -124,6 +127,13 @@ export default function App() {
     return () => triggers.forEach((t) => t.kill())
   }, [])
 
+  useEffect(() => {
+    if (prefersReduced) return
+    // Text length changes between languages; recompute pin/scroll distances.
+    const id = requestAnimationFrame(() => ScrollTrigger.refresh())
+    return () => cancelAnimationFrame(id)
+  }, [lang])
+
   const handleReveal = useCallback(() => setRevealed(true), [])
   const handleIdentDone = useCallback(() => setIdentDone(true), [])
 
@@ -134,6 +144,7 @@ export default function App() {
       )}
       <Nav visible={revealed || prefersReduced} />
       <Hud visible={revealed || prefersReduced} />
+      <ScrollRail visible={revealed || prefersReduced} />
       <CursorFrame reduced={prefersReduced} />
       <Letterbox />
       <LightSweep reduced={prefersReduced} />

@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
+import { useCopy } from '../i18n'
 
 const ROLES = [
   'Dirección de fotografía',
@@ -14,6 +15,7 @@ const ROLES = [
 export default function Apply({ reduced }) {
   const root = useRef(null)
   const [form, setForm] = useState({ nombre: '', rol: '', email: '', reel: '', mensaje: '' })
+  const sceneName = useCopy({ es: 'Escena final — casting', en: 'Final scene — casting' })
 
   useLayoutEffect(() => {
     if (reduced) return
@@ -61,7 +63,7 @@ export default function Apply({ reduced }) {
       <div className="container">
         <div className="scene-head">
           <span className="scene-num">ESC. 07</span>
-          <span className="scene-name">Escena final — casting</span>
+          <span className="scene-name">{sceneName}</span>
         </div>
         <div className="apply-frame">
           <div className="corners">

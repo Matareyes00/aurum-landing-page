@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
+import { useCopy } from '../i18n'
 
 const ITEMS = [
   {
@@ -21,6 +22,7 @@ const ITEMS = [
 
 export default function Community({ reduced }) {
   const root = useRef(null)
+  const sceneName = useCopy({ es: 'La comunidad', en: 'The community' })
 
   useLayoutEffect(() => {
     if (reduced) return
@@ -62,7 +64,7 @@ export default function Community({ reduced }) {
       <div className="container">
         <div className="scene-head">
           <span className="scene-num">ESC. 05</span>
-          <span className="scene-name">La comunidad</span>
+          <span className="scene-name">{sceneName}</span>
         </div>
         <h2>
           <span className="line">

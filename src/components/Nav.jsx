@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react'
+import { useCopy } from '../i18n'
+import LangToggle from './LangToggle'
+
+const COPY = {
+  es: { work: 'El trabajo', training: 'Entrenamiento', community: 'Comunidad', apply: 'Aplicar' },
+  en: { work: 'The work', training: 'Training', community: 'Community', apply: 'Apply' },
+}
 
 export default function Nav({ visible }) {
   const [scrolled, setScrolled] = useState(false)
+  const copy = useCopy(COPY)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -16,12 +24,13 @@ export default function Nav({ visible }) {
         <img className="nav-word" src="/aurum-word.png" alt="AURUM" />
       </a>
       <div className="nav-links">
-        <a href="#trabajo">El trabajo</a>
-        <a href="#entrenamiento">Entrenamiento</a>
-        <a href="#comunidad">Comunidad</a>
+        <a href="#trabajo">{copy.work}</a>
+        <a href="#entrenamiento">{copy.training}</a>
+        <a href="#comunidad">{copy.community}</a>
         <a href="/academy/">Academy</a>
+        <LangToggle className="nav-lang" />
         <a className="nav-cta" href="#aplicar">
-          Aplicar
+          {copy.apply}
         </a>
       </div>
     </nav>

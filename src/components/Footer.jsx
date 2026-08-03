@@ -1,4 +1,10 @@
+import { useCopy } from '../i18n'
+
 export default function Footer() {
+  const tag = useCopy({
+    es: 'Hecho por gente que ama la imagen.',
+    en: 'Made by people who love the image.',
+  })
   return (
     <footer className="footer">
       <div className="container footer-inner">
@@ -7,7 +13,7 @@ export default function Footer() {
           src="/lockup-footer.png"
           alt="Aurum Visual"
         />
-        <p className="footer-tag">Hecho por gente que ama la imagen.</p>
+        <p className="footer-tag">{tag}</p>
         <div className="footer-meta">
           <span>© 2026 Aurum Visual</span>
           <a href="mailto:hello@aurumvisual.com">hello@aurumvisual.com</a>

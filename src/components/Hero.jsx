@@ -2,9 +2,46 @@ import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Dust from '../fx/Dust'
+import { useCopy } from '../i18n'
+
+const COPY = {
+  es: {
+    descriptor: 'Criterio de cine para la era del video generativo',
+    thesis1: 'La máquina ya aprendió a generar.',
+    thesis2a: 'Todavía no aprendió a ',
+    thesis2em: 'mirar',
+    sub: (
+      <>
+        Fotografía, montaje, color y sonido evaluando video generativo con rigor de
+        oficio. <strong>Pagado en dólares</strong>, para financiar lo que de verdad
+        querés filmar.
+      </>
+    ),
+    cta1: 'Quiero ser parte',
+    cta2: 'Ver cómo funciona',
+    rolling: 'Rodando',
+  },
+  en: {
+    descriptor: 'Film-grade judgment for the generative video era',
+    thesis1: 'The machine already learned to generate.',
+    thesis2a: 'It hasn’t yet learned to ',
+    thesis2em: 'see',
+    sub: (
+      <>
+        Cinematography, editing, color and sound evaluating generative video with the
+        rigor of the craft. <strong>Paid in dollars</strong>, to fund what you truly
+        want to film.
+      </>
+    ),
+    cta1: 'I want in',
+    cta2: 'See how it works',
+    rolling: 'Rolling',
+  },
+}
 
 export default function Hero({ started, reduced }) {
   const root = useRef(null)
+  const copy = useCopy(COPY)
 
   useLayoutEffect(() => {
     if (reduced || !started) return
@@ -72,33 +109,29 @@ export default function Hero({ started, reduced }) {
         <h1 className="hero-brand">
           <img src="/aurum-word.png" alt="AURUM" />
         </h1>
-        <p className="hero-descriptor">Criterio de cine para la era del video generativo</p>
+        <p className="hero-descriptor">{copy.descriptor}</p>
         <p className="hero-thesis">
           <span className="line">
-            <span className="line-inner">La máquina ya aprendió a generar.</span>
+            <span className="line-inner">{copy.thesis1}</span>
           </span>
           <span className="line">
             <span className="line-inner">
-              Todavía no aprendió a <em>mirar</em>.
+              {copy.thesis2a}<em>{copy.thesis2em}</em>.
             </span>
           </span>
         </p>
-        <p className="hero-sub">
-          Fotografía, montaje, color y sonido evaluando video generativo con rigor de
-          oficio. <strong>Pagado en dólares</strong>, para financiar lo que de verdad
-          querés filmar.
-        </p>
+        <p className="hero-sub">{copy.sub}</p>
         <div className="hero-ctas">
           <a className="btn btn--gold" href="#aplicar">
-            Quiero ser parte
+            {copy.cta1}
           </a>
           <a className="btn btn--ghost" href="#escena-01">
-            Ver cómo funciona
+            {copy.cta2}
           </a>
         </div>
       </div>
       <div className="hero-scrollcue">
-        <span className="label label--dim">Rodando</span>
+        <span className="label label--dim">{copy.rolling}</span>
         <span className="scroll-line" />
       </div>
     </header>
