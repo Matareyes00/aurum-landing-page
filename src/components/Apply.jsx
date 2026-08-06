@@ -99,7 +99,7 @@ const COPY = {
 
 export default function Apply({ reduced }) {
   const root = useRef(null)
-  const [form, setForm] = useState({ nombre: '', rol: '', email: '', reel: '', mensaje: '' })
+  const [form, setForm] = useState({ nombre: '', rol: '', email: '', reel: '', mensaje: '', website: '' })
   const t = useCopy(COPY)
 
   useLayoutEffect(() => {
@@ -128,6 +128,7 @@ export default function Apply({ reduced }) {
 
   const submit = (e) => {
     e.preventDefault()
+    if (form.website) return // honeypot: silently drop bot submissions
     const subject = `${t.mailSubject} — ${form.nombre}${form.rol ? ` (${form.rol})` : ''}`
     const body = [
       `${t.mailName}: ${form.nombre}`,
@@ -144,10 +145,10 @@ export default function Apply({ reduced }) {
   }
 
   return (
-    <section className="scene apply" id="aplicar" ref={root} data-scene="07">
+    <section className="scene apply" id="aplicar" ref={root} data-scene="04">
       <div className="container">
         <div className="scene-head">
-          <span className="scene-num">ESC. 07</span>
+          <span className="scene-num">ESC. 04</span>
           <span className="scene-name">{t.sceneName}</span>
         </div>
         <div className="apply-frame">
@@ -224,6 +225,17 @@ export default function Apply({ reduced }) {
                   placeholder={t.messagePlaceholder}
                   value={form.mensaje}
                   onChange={set('mensaje')}
+                />
+              </div>
+              <div className="hp-field" aria-hidden="true">
+                <label htmlFor="f-website">No completar</label>
+                <input
+                  id="f-website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={form.website}
+                  onChange={set('website')}
                 />
               </div>
               <div className="form-submit">

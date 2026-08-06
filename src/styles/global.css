@@ -540,7 +540,7 @@ textarea {
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-  padding: 7rem 0 11rem;
+  padding: 6rem 0 8rem;
 }
 
 .hero-atmos {
@@ -789,14 +789,14 @@ textarea {
 
 .scene {
   position: relative;
-  padding: clamp(7rem, 14vh, 11rem) 0;
+  padding: clamp(4.5rem, 9vh, 7.5rem) 0;
 }
 
 .scene-head {
   display: flex;
   align-items: baseline;
   gap: 1.6rem;
-  margin-bottom: clamp(3rem, 7vh, 5rem);
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
 }
 
 .scene-head::after {
@@ -970,7 +970,7 @@ textarea {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   gap: clamp(2.5rem, 6vw, 6rem);
-  margin-bottom: clamp(4rem, 8vh, 6rem);
+  margin-bottom: clamp(2.5rem, 5vh, 4rem);
 }
 
 @media (max-width: 900px) {
@@ -2664,4 +2664,150 @@ textarea {
 
 @media (max-width: 899px) {
   .viewer-hint { display: none; }
+}
+
+/* ---------- honeypot (bot trap) ---------- */
+
+.hp-field {
+  position: absolute !important;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- academy typography — editorial / serif-led ---------- */
+
+.acad-hero h1 {
+  font-size: clamp(2.7rem, 6.2vw, 5rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* the subhead becomes an editorial serif lede, not a caption */
+.acad-hero-sub {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  line-height: 1.55;
+  letter-spacing: 0.005em;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.acad-hero-sub strong {
+  font-weight: 500;
+  color: var(--ivory);
+}
+
+/* quiet the mono eyebrows so the serif leads */
+.acad-soon {
+  font-size: 0.56rem;
+  letter-spacing: 0.34em;
+  color: var(--faint);
+}
+
+.acad-keyline {
+  letter-spacing: 0.32em;
+  color: var(--faint);
+  text-wrap: balance;
+}
+
+.acad-title-academy {
+  font-size: clamp(1.05rem, 2.2vw, 1.55rem);
+  letter-spacing: 0.62em;
+  text-indent: 0.62em;
+}
+
+.acad-program h2,
+.acad-signup h2 {
+  font-size: clamp(2.6rem, 5.8vw, 4.8rem);
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+.acad-program .body-copy,
+.acad-signup .body-copy {
+  font-size: clamp(1rem, 1.35vw, 1.16rem);
+  line-height: 1.8;
+}
+
+.strip-frame h3,
+.ticket-main h3 {
+  letter-spacing: -0.015em;
+}
+
+.strip-frame h3 {
+  font-size: clamp(1.3rem, 1.7vw, 1.6rem);
+}
+
+.strip-frame p {
+  text-wrap: pretty;
+}
+
+/* ---------- persistent academy CTA ---------- */
+
+.sticky-cta {
+  position: fixed;
+  left: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(3.2rem, 7vh, 4.2rem);
+  z-index: 92;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1.1rem;
+  text-decoration: none;
+  background: rgba(9, 6, 4, 0.72);
+  border: 1px solid var(--hairline);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease;
+}
+
+.sticky-cta.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.sticky-cta:hover { border-color: var(--gold); }
+
+.sticky-cta-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.32em;
+  color: var(--gold);
+  border-right: 1px solid var(--hairline-soft);
+  padding-right: 0.75rem;
+}
+
+.sticky-cta-label {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: var(--ivory);
+}
+
+.sticky-cta-arrow {
+  color: var(--gold);
+  transition: transform 0.35s ease;
+}
+
+.sticky-cta:hover .sticky-cta-arrow { transform: translateX(4px); }
+
+@media (max-width: 600px) {
+  .sticky-cta {
+    bottom: 3.4rem;
+    padding: 0.6rem 0.9rem;
+  }
+  .sticky-cta-eyebrow { display: none; }
 }

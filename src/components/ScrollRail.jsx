@@ -3,13 +3,10 @@ import { useLang } from '../i18n'
 
 const SCENES = [
   { id: 'top', num: '00', es: 'Apertura', en: 'Opening' },
-  { id: 'escena-01', num: '01', es: 'La escena', en: 'The scene' },
-  { id: 'trabajo', num: '02', es: 'El trabajo', en: 'The work' },
-  { id: 'entrenamiento', num: '03', es: 'Entrenamiento', en: 'Training' },
-  { id: 'recorrido', num: '04', es: 'El recorrido', en: 'The path' },
-  { id: 'comunidad', num: '05', es: 'Comunidad', en: 'Community' },
-  { id: 'promesa', num: '06', es: 'La promesa', en: 'The promise' },
-  { id: 'aplicar', num: '07', es: 'El casting', en: 'Casting' },
+  { id: 'trabajo', num: '01', es: 'El trabajo', en: 'The work' },
+  { id: 'promesa', num: '02', es: 'La promesa', en: 'The promise' },
+  { id: 'recorrido', num: '03', es: 'El recorrido', en: 'The path' },
+  { id: 'aplicar', num: '04', es: 'El casting', en: 'Casting' },
 ]
 
 export default function ScrollRail({ visible }) {

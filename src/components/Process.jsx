@@ -104,10 +104,10 @@ export default function Process({ reduced }) {
   }, [reduced, copy])
 
   return (
-    <section className="scene process" id="recorrido" ref={root} data-scene="04">
+    <section className="scene process" id="recorrido" ref={root} data-scene="03">
       <div className="container">
         <div className="scene-head">
-          <span className="scene-num">ESC. 04</span>
+          <span className="scene-num">ESC. 03</span>
           <span className="scene-name">{copy.name}</span>
         </div>
       </div>

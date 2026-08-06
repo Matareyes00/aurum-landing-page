@@ -6,18 +6,16 @@ import Ident from './components/Ident'
 import Nav from './components/Nav'
 import Hud from './components/Hud'
 import ScrollRail from './components/ScrollRail'
+import StickyCTA from './components/StickyCTA'
 import { useLang } from './i18n'
 import CursorFrame from './fx/CursorFrame'
 import Letterbox from './fx/Letterbox'
 import LightSweep from './fx/LightSweep'
 import { scramble } from './fx/scramble'
 import Hero from './components/Hero'
-import Tension from './components/Tension'
 import Marquee from './components/Marquee'
 import Mechanism from './components/Mechanism'
-import Training from './components/Training'
 import Process from './components/Process'
-import Community from './components/Community'
 import PromiseScene from './components/Promise'
 import Apply from './components/Apply'
 import Footer from './components/Footer'
@@ -145,6 +143,7 @@ export default function App() {
       <Nav visible={revealed || prefersReduced} />
       <Hud visible={revealed || prefersReduced} />
       <ScrollRail visible={revealed || prefersReduced} />
+      <StickyCTA />
       <CursorFrame reduced={prefersReduced} />
       <Letterbox />
       <LightSweep reduced={prefersReduced} />
@@ -153,13 +152,10 @@ export default function App() {
       <div className="grain" />
       <main>
         <Hero started={revealed || prefersReduced} reduced={prefersReduced} />
-        <Tension reduced={prefersReduced} />
         <Marquee />
         <Mechanism reduced={prefersReduced} />
-        <Training reduced={prefersReduced} />
-        <Process reduced={prefersReduced} />
-        <Community reduced={prefersReduced} />
         <PromiseScene reduced={prefersReduced} />
+        <Process reduced={prefersReduced} />
         <Apply reduced={prefersReduced} />
       </main>
       <Footer />

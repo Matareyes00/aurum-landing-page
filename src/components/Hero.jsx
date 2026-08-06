@@ -125,7 +125,7 @@ export default function Hero({ started, reduced }) {
           <a className="btn btn--gold" href="#aplicar">
             {copy.cta1}
           </a>
-          <a className="btn btn--ghost" href="#escena-01">
+          <a className="btn btn--ghost" href="#trabajo">
             {copy.cta2}
           </a>
         </div>

@@ -78,7 +78,7 @@ export default function Hud({ visible }) {
       <span ref={tcRef} aria-hidden="true">TC 00:00:00:00</span>
       <div className="hud-right">
         <span aria-hidden="true">2.39:1 · 24 FPS</span>
-        <span aria-hidden="true">ESC {scene} / 07</span>
+        <span aria-hidden="true">ESC {scene} / 04</span>
         <button
           type="button"
           className={`hud-sala ${sala ? 'is-on' : ''}`}

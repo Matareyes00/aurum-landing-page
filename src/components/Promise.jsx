@@ -26,6 +26,9 @@ const COPY = {
         <strong>Aurum sea parte de la respuesta</strong>.
       </>
     ),
+    quote1: 'Que el oficio',
+    quote2a: 'pague ',
+    quote2em: 'la obra.',
   },
   en: {
     sceneName: 'The promise',
@@ -50,6 +53,9 @@ const COPY = {
         <strong>Aurum is part of the answer</strong>.
       </>
     ),
+    quote1: 'Let the craft',
+    quote2a: 'pay for ',
+    quote2em: 'the work.',
   },
 }
 
@@ -91,15 +97,22 @@ export default function PromiseScene({ reduced }) {
         ease: 'power2.out',
         scrollTrigger: { trigger: '.promise-close', start: 'top 85%' },
       })
+      gsap.from('.promise .pullquote .line-inner', {
+        yPercent: 115,
+        duration: 1.3,
+        ease: 'power4.out',
+        stagger: 0.12,
+        scrollTrigger: { trigger: '.promise .pullquote', start: 'top 85%' },
+      })
     }, root)
     return () => ctx.revert()
   }, [reduced])
 
   return (
-    <section className="scene promise" id="promesa" ref={root} data-scene="06">
+    <section className="scene promise" id="promesa" ref={root} data-scene="02">
       <div className="container">
         <div className="scene-head">
-          <span className="scene-num">ESC. 06</span>
+          <span className="scene-num">ESC. 02</span>
           <span className="scene-name">{t.sceneName}</span>
         </div>
         <h2>
@@ -130,6 +143,16 @@ export default function PromiseScene({ reduced }) {
           </div>
         </div>
         <p className="promise-close">{t.close}</p>
+        <p className="pullquote">
+          <span className="line">
+            <span className="line-inner">{t.quote1}</span>
+          </span>
+          <span className="line">
+            <span className="line-inner">
+              {t.quote2a}<em className="gold-text shimmer">{t.quote2em}</em>
+            </span>
+          </span>
+        </p>
       </div>
     </section>
   )

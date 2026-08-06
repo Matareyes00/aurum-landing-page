@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
+    // No inline module-preload polyfill script, so a strict
+    // `script-src 'self'` CSP (see public/_headers) has nothing to block.
+    modulePreload: { polyfill: false },
     rollupOptions: {
       input: {
         main: fileURLToPath(new URL('./index.html', import.meta.url)),

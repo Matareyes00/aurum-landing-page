@@ -5,7 +5,9 @@ import Lenis from 'lenis'
 import CursorFrame from '../fx/CursorFrame'
 import Dust from '../fx/Dust'
 import Footer from '../components/Footer'
+import LangToggle from '../components/LangToggle'
 import { scramble } from '../fx/scramble'
+import { useCopy, useLang } from '../i18n'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -13,36 +15,182 @@ const prefersReduced =
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-const PROGRAM = [
-  {
-    num: 'BOBINA 01',
-    title: 'El Codex',
-    desc: 'El idioma de Aurum: la taxonomía de errores del video generativo —identidad, luz, continuidad, física, sonido—, los niveles de severidad y los grados de confianza. Nombrar lo que ves como lo nombra la industria que entrena modelos.',
+const COPY = {
+  es: {
+    navBack: 'Volver a la sala',
+    navCta: 'Reservar butaca',
+    heroSoon: 'PRÓXIMAMENTE · PRIMERA COHORTE · CERTIFICACIÓN GRATUITA',
+    h1a: 'El nuevo oficio',
+    h1b: 'de ',
+    h1em: 'mirar',
+    heroSub: (
+      <>
+        Convertí tu ojo de cine en un oficio nuevo. Una certificación gratuita donde
+        aprendés a evaluar video generado por IA con criterio de oficio y estándares de
+        anotación profesional. Al certificarte, entrás a la pool de Aurum:{' '}
+        <strong>proyectos reales, pagos en dólares</strong>.
+      </>
+    ),
+    keyline:
+      'CERTIFICACIÓN · EVALUACIÓN EXPERTA DE VIDEO GENERATIVO · ANOTACIÓN ESPECIALIZADA',
+    cta1: 'Reservá tu butaca',
+    cta2: 'Qué vas a aprender',
+    progName: 'El programa',
+    progH2a: 'Tres bobinas. Un oficio ',
+    progH2em: 'nuevo',
+    progBody: (
+      <>
+        No venimos a enseñarte a mirar: eso ya lo traés. Venimos a darte el idioma y el
+        estándar para que tu mirada se vuelva{' '}
+        <strong>criterio útil para entrenar modelos</strong> — y un trabajo que se paga.
+      </>
+    ),
+    program: [
+      {
+        num: 'BOBINA 01',
+        title: 'El Codex',
+        desc: 'El idioma de Aurum: la taxonomía de errores del video generativo —identidad, luz, continuidad, física, sonido—, los niveles de severidad y los grados de confianza. Nombrar lo que ves como lo nombra la industria que entrena modelos.',
+      },
+      {
+        num: 'BOBINA 02',
+        title: 'Los workflows',
+        desc: 'Preference Evaluation: comparar dos outputs y decidir con criterio, no con instinto suelto. Detección de fallas: marcar el frame exacto y justificar. Casos reales, feedback real, estándares de anotación profesional.',
+      },
+      {
+        num: 'BOBINA 03',
+        title: 'El certificado',
+        desc: 'Un certificado verificable de Evaluador Cinematográfico de Video Generativo —para tu LinkedIn y tu CV— y la entrada a la pool de talento de Aurum, de donde salen los proyectos pagos en dólares.',
+      },
+    ],
+    howName: 'Cómo funciona',
+    steps: [
+      { num: 'F·01', title: 'Te anotás', desc: 'Dejás tu contacto. Te avisamos cuando abra la primera cohorte.' },
+      { num: 'F·02', title: 'Cursás gratis', desc: 'El Codex, los workflows y práctica con clips reales. Sin costo.' },
+      { num: 'F·03', title: 'Te certificás', desc: 'Demostrás criterio consistente y firmás tu certificado.' },
+      { num: 'F·04', title: 'Entrás a la pool', desc: 'Proyectos de laboratorios de IA, pagos en dólares.' },
+    ],
+    stripNote: 'GRATUITA DE PUNTA A PUNTA · TU OJO PONE EL RESTO',
+    certName: 'Primera certificación',
+    ticketLabel: 'CERTIFICACIÓN 01 · WORKFLOW 01',
+    ticketBody:
+      'Dos videos generados por IA, lado a lado. Decidís cuál cumple mejor y explicás por qué, con criterios claros del Codex. Es la primera certificación de Aurum — y tu entrada a la pool.',
+    ticketStamp: 'PRÓXIMAMENTE',
+    ticketNote: 'EL EQUIPO ESTÁ CARGANDO EL PROYECTOR',
+    signName: 'Función privada',
+    signLabel: 'Cupos de la primera cohorte',
+    signH2a: 'Reservá tu ',
+    signH2em: 'butaca',
+    signBody:
+      'La primera cohorte abre pronto y arranca con cupos cortos. Dejanos tu contacto y te guardamos el asiento: te escribimos una sola vez, cuando se abra la sala.',
+    signMailA: '¿Ya te sentís listo/a para aplicar directo? ',
+    signMailLink: 'El casting está abierto',
+    nameLabel: 'Nombre',
+    namePlaceholder: 'Tu nombre',
+    emailLabel: 'Email',
+    emailPlaceholder: 'vos@tucine.com',
+    roleLabel: 'Tu oficio (opcional)',
+    rolePlaceholder: 'Foto, montaje, color, sonido, dirección…',
+    submit: 'Reservar mi butaca',
+    note: 'SE ABRE TU CLIENTE DE CORREO · UN SOLO AVISO, PALABRA DE CINÉFILOS',
+    mailSubject: 'Aurum Academy — Reserva primera cohorte',
+    mailName: 'Nombre',
+    mailEmail: 'Email',
+    mailRole: 'Oficio',
+    mailBody:
+      'Quiero recibir el aviso cuando abra la primera cohorte de Aurum Academy (Workflow 01 — Preference Evaluation).',
   },
-  {
-    num: 'BOBINA 02',
-    title: 'Los workflows',
-    desc: 'Preference Evaluation: comparar dos outputs y decidir con criterio, no con instinto suelto. Detección de fallas: marcar el frame exacto y justificar. Casos reales, feedback real, estándares de anotación profesional.',
+  en: {
+    navBack: 'Back to the theater',
+    navCta: 'Reserve a seat',
+    heroSoon: 'COMING SOON · FIRST COHORT · FREE CERTIFICATION',
+    h1a: 'The new craft',
+    h1b: 'of ',
+    h1em: 'seeing',
+    heroSub: (
+      <>
+        Turn your cinematic eye into a new craft. A free certification where you learn to
+        evaluate AI-generated video with the rigor of the craft and professional
+        annotation standards. Once certified, you join the Aurum pool:{' '}
+        <strong>real projects, paid in dollars</strong>.
+      </>
+    ),
+    keyline:
+      'CERTIFICATION · EXPERT GENERATIVE-VIDEO EVALUATION · SPECIALIZED ANNOTATION',
+    cta1: 'Reserve your seat',
+    cta2: 'What you’ll learn',
+    progName: 'The program',
+    progH2a: 'Three reels. A ',
+    progH2em: 'new craft',
+    progBody: (
+      <>
+        We’re not here to teach you to see: you already bring that. We’re here to give
+        you the language and the standard so your eye becomes{' '}
+        <strong>judgment useful for training models</strong> — and work that pays.
+      </>
+    ),
+    program: [
+      {
+        num: 'REEL 01',
+        title: 'The Codex',
+        desc: 'Aurum’s language: the taxonomy of generative-video errors —identity, light, continuity, physics, sound—, the severity levels and confidence grades. Naming what you see the way the model-training industry names it.',
+      },
+      {
+        num: 'REEL 02',
+        title: 'The workflows',
+        desc: 'Preference Evaluation: compare two outputs and decide with judgment, not loose instinct. Flaw detection: mark the exact frame and justify it. Real cases, real feedback, professional annotation standards.',
+      },
+      {
+        num: 'REEL 03',
+        title: 'The certificate',
+        desc: 'A verifiable Cinematic Generative-Video Evaluator certificate —for your LinkedIn and your CV— and entry to Aurum’s talent pool, where the projects paid in dollars come from.',
+      },
+    ],
+    howName: 'How it works',
+    steps: [
+      { num: 'F·01', title: 'You sign up', desc: 'Leave your contact. We’ll let you know when the first cohort opens.' },
+      { num: 'F·02', title: 'You study free', desc: 'The Codex, the workflows and practice with real clips. No cost.' },
+      { num: 'F·03', title: 'You get certified', desc: 'You show consistent judgment and sign your certificate.' },
+      { num: 'F·04', title: 'You join the pool', desc: 'Projects from AI labs, paid in dollars.' },
+    ],
+    stripNote: 'FREE END TO END · YOUR EYE DOES THE REST',
+    certName: 'First certification',
+    ticketLabel: 'CERTIFICATION 01 · WORKFLOW 01',
+    ticketBody:
+      'Two AI-generated videos, side by side. You decide which one delivers better and explain why, with clear Codex criteria. It’s Aurum’s first certification — and your entry to the pool.',
+    ticketStamp: 'COMING SOON',
+    ticketNote: 'THE TEAM IS LOADING THE PROJECTOR',
+    signName: 'Private screening',
+    signLabel: 'First cohort spots',
+    signH2a: 'Reserve your ',
+    signH2em: 'seat',
+    signBody:
+      'The first cohort opens soon and starts with limited spots. Leave us your contact and we’ll hold your seat: we write once, when the theater opens.',
+    signMailA: 'Already feel ready to apply directly? ',
+    signMailLink: 'The casting is open',
+    nameLabel: 'Name',
+    namePlaceholder: 'Your name',
+    emailLabel: 'Email',
+    emailPlaceholder: 'you@yourfilm.com',
+    roleLabel: 'Your craft (optional)',
+    rolePlaceholder: 'Photography, editing, color, sound, directing…',
+    submit: 'Reserve my seat',
+    note: 'OPENS YOUR EMAIL CLIENT · ONE NOTICE ONLY, A CINEPHILE’S WORD',
+    mailSubject: 'Aurum Academy — First cohort reservation',
+    mailName: 'Name',
+    mailEmail: 'Email',
+    mailRole: 'Craft',
+    mailBody:
+      'I want to be notified when the first cohort of Aurum Academy (Workflow 01 — Preference Evaluation) opens.',
   },
-  {
-    num: 'BOBINA 03',
-    title: 'El certificado',
-    desc: 'Un certificado verificable de Evaluador Cinematográfico de Video Generativo —para tu LinkedIn y tu CV— y la entrada a la pool de talento de Aurum, de donde salen los proyectos pagos en dólares.',
-  },
-]
-
-const STEPS = [
-  { num: 'F·01', title: 'Te anotás', desc: 'Dejás tu contacto. Te avisamos cuando abra la primera cohorte.' },
-  { num: 'F·02', title: 'Cursás gratis', desc: 'El Codex, los workflows y práctica con clips reales. Sin costo.' },
-  { num: 'F·03', title: 'Te certificás', desc: 'Demostrás criterio consistente y firmás tu certificado.' },
-  { num: 'F·04', title: 'Entrás a la pool', desc: 'Proyectos de laboratorios de IA, pagos en dólares.' },
-]
+}
 
 export default function AcademyApp() {
   const lightRef = useRef(null)
   const lenisRef = useRef(null)
   const [gatesDone, setGatesDone] = useState(prefersReduced)
-  const [form, setForm] = useState({ nombre: '', email: '', rol: '' })
+  const [form, setForm] = useState({ nombre: '', email: '', rol: '', website: '' })
+  const lang = useLang()
+  const t = useCopy(COPY)
 
   useEffect(() => {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
@@ -175,15 +323,22 @@ export default function AcademyApp() {
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
 
+  useEffect(() => {
+    if (prefersReduced) return
+    const id = requestAnimationFrame(() => ScrollTrigger.refresh())
+    return () => cancelAnimationFrame(id)
+  }, [lang])
+
   const submit = (e) => {
     e.preventDefault()
-    const subject = `Aurum Academy — Reserva primera cohorte — ${form.nombre}`
+    if (form.website) return // honeypot: silently drop bot submissions
+    const subject = `${t.mailSubject} — ${form.nombre}`
     const body = [
-      `Nombre: ${form.nombre}`,
-      `Email: ${form.email}`,
-      form.rol ? `Oficio: ${form.rol}` : null,
+      `${t.mailName}: ${form.nombre}`,
+      `${t.mailEmail}: ${form.email}`,
+      form.rol ? `${t.mailRole}: ${form.rol}` : null,
       '',
-      'Quiero recibir el aviso cuando abra la primera cohorte de Aurum Academy (Workflow 01 — Preference Evaluation).',
+      t.mailBody,
     ]
       .filter((l) => l !== null)
       .join('\n')
@@ -211,9 +366,10 @@ export default function AcademyApp() {
           <img className="nav-word" src="/aurum-word.png" alt="AURUM" />
         </a>
         <div className="nav-links">
-          <a href="/">Volver a la sala</a>
+          <a href="/">{t.navBack}</a>
+          <LangToggle className="nav-lang" />
           <a className="nav-cta" href="#anotarse">
-            Reservar butaca
+            {t.navCta}
           </a>
         </div>
       </nav>
@@ -227,36 +383,29 @@ export default function AcademyApp() {
           </div>
           <Dust reduced={prefersReduced} />
           <div className="container acad-hero-inner">
-            <span className="label acad-soon">PRÓXIMAMENTE · PRIMERA COHORTE · CERTIFICACIÓN GRATUITA</span>
+            <span className="label acad-soon">{t.heroSoon}</span>
             <div className="acad-title">
               <img className="acad-title-word" src="/aurum-word.png" alt="Aurum" />
               <span className="acad-title-academy">ACADEMY</span>
             </div>
             <h1>
               <span className="line">
-                <span className="line-inner">El nuevo oficio</span>
+                <span className="line-inner">{t.h1a}</span>
               </span>
               <span className="line">
                 <span className="line-inner">
-                  de <em className="gold-text shimmer">mirar</em>.
+                  {t.h1b}<em className="gold-text shimmer">{t.h1em}</em>.
                 </span>
               </span>
             </h1>
-            <p className="acad-hero-sub">
-              Convertí tu ojo de cine en un oficio nuevo. Una certificación gratuita
-              donde aprendés a evaluar video generado por IA con criterio de oficio
-              y estándares de anotación profesional. Al certificarte, entrás a la pool
-              de Aurum: <strong>proyectos reales, pagos en dólares</strong>.
-            </p>
-            <span className="acad-keyline">
-              CERTIFICACIÓN · EVALUACIÓN EXPERTA DE VIDEO GENERATIVO · ANOTACIÓN ESPECIALIZADA
-            </span>
+            <p className="acad-hero-sub">{t.heroSub}</p>
+            <span className="acad-keyline">{t.keyline}</span>
             <div className="hero-ctas">
               <a className="btn btn--gold" href="#anotarse">
-                Reservá tu butaca
+                {t.cta1}
               </a>
               <a className="btn btn--ghost" href="#programa">
-                Qué vas a aprender
+                {t.cta2}
               </a>
             </div>
           </div>
@@ -266,18 +415,14 @@ export default function AcademyApp() {
           <div className="container">
             <div className="scene-head">
               <span className="scene-num">AC. 01</span>
-              <span className="scene-name">El programa</span>
+              <span className="scene-name">{t.progName}</span>
             </div>
             <h2 className="acad-reveal">
-              Tres bobinas. Un oficio <em className="gold-text shimmer">nuevo</em>.
+              {t.progH2a}<em className="gold-text shimmer">{t.progH2em}</em>.
             </h2>
-            <p className="body-copy acad-reveal">
-              No venimos a enseñarte a mirar: eso ya lo traés. Venimos a darte el idioma
-              y el estándar para que tu mirada se vuelva <strong>criterio útil para
-              entrenar modelos</strong> — y un trabajo que se paga.
-            </p>
+            <p className="body-copy acad-reveal">{t.progBody}</p>
             <div className="bobinas">
-              {PROGRAM.map((b) => (
+              {t.program.map((b) => (
                 <div className="bobina" key={b.num}>
                   <span className="label label--dim">{b.num}</span>
                   <h3>{b.title}</h3>
@@ -292,11 +437,11 @@ export default function AcademyApp() {
           <div className="container">
             <div className="scene-head">
               <span className="scene-num">AC. 02</span>
-              <span className="scene-name">Cómo funciona</span>
+              <span className="scene-name">{t.howName}</span>
             </div>
             <div className="strip">
               <div className="strip-frames">
-                {STEPS.map((s) => (
+                {t.steps.map((s) => (
                   <div className="strip-frame" key={s.num}>
                     <span className="label label--dim">{s.num}</span>
                     <h3>{s.title}</h3>
@@ -305,9 +450,7 @@ export default function AcademyApp() {
                 ))}
               </div>
             </div>
-            <p className="acad-strip-note acad-reveal">
-              GRATUITA DE PUNTA A PUNTA · TU OJO PONE EL RESTO
-            </p>
+            <p className="acad-strip-note acad-reveal">{t.stripNote}</p>
           </div>
         </section>
 
@@ -315,20 +458,16 @@ export default function AcademyApp() {
           <div className="container">
             <div className="scene-head">
               <span className="scene-num">AC. 03</span>
-              <span className="scene-name">Primera certificación</span>
+              <span className="scene-name">{t.certName}</span>
             </div>
             <div className="acad-ticket acad-reveal">
               <div className="corners">
                 <span /><span /><span /><span />
               </div>
               <div className="ticket-main">
-                <span className="label">CERTIFICACIÓN 01 · WORKFLOW 01</span>
+                <span className="label">{t.ticketLabel}</span>
                 <h3>Preference Evaluation</h3>
-                <p className="body-copy">
-                  Dos videos generados por IA, lado a lado. Decidís cuál cumple mejor y
-                  explicás por qué, con criterios claros del Codex. Es la primera
-                  certificación de Aurum — y tu entrada a la pool.
-                </p>
+                <p className="body-copy">{t.ticketBody}</p>
                 <div className="ticket-ab" aria-hidden="true">
                   <span className="ticket-take">A</span>
                   <span className="ticket-vs">VS</span>
@@ -336,8 +475,8 @@ export default function AcademyApp() {
                 </div>
               </div>
               <div className="ticket-side">
-                <span className="wf-stamp">PRÓXIMAMENTE</span>
-                <span className="ticket-note">EL EQUIPO ESTÁ CARGANDO EL PROYECTOR</span>
+                <span className="wf-stamp">{t.ticketStamp}</span>
+                <span className="ticket-note">{t.ticketNote}</span>
               </div>
             </div>
           </div>
@@ -347,7 +486,7 @@ export default function AcademyApp() {
           <div className="container">
             <div className="scene-head">
               <span className="scene-num">AC. 04</span>
-              <span className="scene-name">Función privada</span>
+              <span className="scene-name">{t.signName}</span>
             </div>
             <div className="apply-frame acad-reveal">
               <div className="corners">
@@ -355,60 +494,65 @@ export default function AcademyApp() {
               </div>
               <div className="apply-grid">
                 <div>
-                  <p className="label">Cupos de la primera cohorte</p>
+                  <p className="label">{t.signLabel}</p>
                   <h2>
-                    Reservá tu <em className="gold-text shimmer">butaca</em>.
+                    {t.signH2a}<em className="gold-text shimmer">{t.signH2em}</em>.
                   </h2>
-                  <p className="body-copy">
-                    La primera cohorte abre pronto y arranca con cupos cortos. Dejanos
-                    tu contacto y te guardamos el asiento: te escribimos una sola vez,
-                    cuando se abra la sala.
-                  </p>
+                  <p className="body-copy">{t.signBody}</p>
                   <p className="apply-mail">
-                    ¿Ya te sentís listo/a para aplicar directo?{' '}
-                    <a href="/#aplicar">El casting está abierto</a>
+                    {t.signMailA}
+                    <a href="/#aplicar">{t.signMailLink}</a>
                   </p>
                 </div>
                 <form className="form" onSubmit={submit}>
                   <div className="field">
-                    <label htmlFor="a-nombre">Nombre</label>
+                    <label htmlFor="a-nombre">{t.nameLabel}</label>
                     <input
                       id="a-nombre"
                       type="text"
                       required
-                      placeholder="Tu nombre"
+                      placeholder={t.namePlaceholder}
                       value={form.nombre}
                       onChange={set('nombre')}
                     />
                   </div>
                   <div className="field">
-                    <label htmlFor="a-email">Email</label>
+                    <label htmlFor="a-email">{t.emailLabel}</label>
                     <input
                       id="a-email"
                       type="email"
                       required
-                      placeholder="vos@tucine.com"
+                      placeholder={t.emailPlaceholder}
                       value={form.email}
                       onChange={set('email')}
                     />
                   </div>
                   <div className="field field--full">
-                    <label htmlFor="a-rol">Tu oficio (opcional)</label>
+                    <label htmlFor="a-rol">{t.roleLabel}</label>
                     <input
                       id="a-rol"
                       type="text"
-                      placeholder="Foto, montaje, color, sonido, dirección…"
+                      placeholder={t.rolePlaceholder}
                       value={form.rol}
                       onChange={set('rol')}
                     />
                   </div>
+                  <div className="hp-field" aria-hidden="true">
+                    <label htmlFor="a-website">No completar</label>
+                    <input
+                      id="a-website"
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={form.website}
+                      onChange={set('website')}
+                    />
+                  </div>
                   <div className="form-submit">
                     <button className="btn btn--gold" type="submit">
-                      Reservar mi butaca
+                      {t.submit}
                     </button>
-                    <span className="form-note">
-                      SE ABRE TU CLIENTE DE CORREO · UN SOLO AVISO, PALABRA DE CINÉFILOS
-                    </span>
+                    <span className="form-note">{t.note}</span>
                   </div>
                 </form>
               </div>

@@ -408,10 +408,10 @@ export default function Mechanism({ reduced }) {
   }
 
   return (
-    <section className="scene" id="trabajo" ref={root} data-scene="02">
+    <section className="scene" id="trabajo" ref={root} data-scene="01">
       <div className="container">
         <div className="scene-head">
-          <span className="scene-num">ESC. 02</span>
+          <span className="scene-num">ESC. 01</span>
           <span className="scene-name">{t.sceneName}</span>
         </div>
 
