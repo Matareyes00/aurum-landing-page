@@ -15,11 +15,24 @@ const prefersReduced =
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+const SEO = {
+  es: {
+    title: 'Aurum Academy — Certificá tu criterio cinematográfico',
+    description:
+      'Certificación gratuita para evaluar video generado por IA con criterio cinematográfico y acceder a proyectos pagos.',
+  },
+  en: {
+    title: 'Aurum Academy — Certify your cinematic judgment',
+    description:
+      'Free certification to evaluate AI-generated video with cinematic judgment and access paid projects.',
+  },
+}
+
 const COPY = {
   es: {
     navBack: 'Volver a la sala',
     navCta: 'Reservar butaca',
-    heroSoon: 'PRÓXIMAMENTE · PRIMERA COHORTE · CERTIFICACIÓN GRATUITA',
+    heroSoon: 'PRIMERA COHORTE · CERTIFICACIÓN GRATUITA',
     h1a: 'El nuevo oficio',
     h1b: 'de ',
     h1em: 'mirar',
@@ -27,12 +40,16 @@ const COPY = {
       <>
         Convertí tu ojo de cine en un oficio nuevo. Una certificación gratuita donde
         aprendés a evaluar video generado por IA con criterio de oficio y estándares de
-        anotación profesional. Al certificarte, entrás a la pool de Aurum:{' '}
+        anotación profesional. Al certificarte, entrás a la red de evaluadores de
+        Aurum:{' '}
         <strong>proyectos reales, pagos en dólares</strong>.
       </>
     ),
-    keyline:
-      'CERTIFICACIÓN · EVALUACIÓN EXPERTA DE VIDEO GENERATIVO · ANOTACIÓN ESPECIALIZADA',
+    keyline: [
+      'Certificación gratuita',
+      'Evaluación experta de video',
+      'Acceso a proyectos pagos',
+    ],
     cta1: 'Reservá tu butaca',
     cta2: 'Qué vas a aprender',
     progName: 'El programa',
@@ -59,7 +76,7 @@ const COPY = {
       {
         num: 'BOBINA 03',
         title: 'El certificado',
-        desc: 'Un certificado verificable de Evaluador Cinematográfico de Video Generativo —para tu LinkedIn y tu CV— y la entrada a la pool de talento de Aurum, de donde salen los proyectos pagos en dólares.',
+        desc: 'Un certificado verificable de Evaluador Cinematográfico de Video Generativo —para tu LinkedIn y tu CV— y la entrada a la red de talento de Aurum, de donde salen los proyectos pagos en dólares.',
       },
     ],
     howName: 'Cómo funciona',
@@ -73,7 +90,7 @@ const COPY = {
     certName: 'Primera certificación',
     ticketLabel: 'CERTIFICACIÓN 01 · WORKFLOW 01',
     ticketBody:
-      'Dos videos generados por IA, lado a lado. Decidís cuál cumple mejor y explicás por qué, con criterios claros del Codex. Es la primera certificación de Aurum — y tu entrada a la pool.',
+      'Dos videos generados por IA, lado a lado. Decidís cuál cumple mejor y explicás por qué, con criterios claros del Codex. Es la primera certificación de Aurum — y tu entrada a la red de evaluadores.',
     ticketStamp: 'PRÓXIMAMENTE',
     ticketNote: 'EL EQUIPO ESTÁ CARGANDO EL PROYECTOR',
     signName: 'Función privada',
@@ -102,7 +119,7 @@ const COPY = {
   en: {
     navBack: 'Back to the theater',
     navCta: 'Reserve a seat',
-    heroSoon: 'COMING SOON · FIRST COHORT · FREE CERTIFICATION',
+    heroSoon: 'FIRST COHORT · FREE CERTIFICATION',
     h1a: 'The new craft',
     h1b: 'of ',
     h1em: 'seeing',
@@ -110,12 +127,15 @@ const COPY = {
       <>
         Turn your cinematic eye into a new craft. A free certification where you learn to
         evaluate AI-generated video with the rigor of the craft and professional
-        annotation standards. Once certified, you join the Aurum pool:{' '}
+        annotation standards. Once certified, you join Aurum’s evaluator network:{' '}
         <strong>real projects, paid in dollars</strong>.
       </>
     ),
-    keyline:
-      'CERTIFICATION · EXPERT GENERATIVE-VIDEO EVALUATION · SPECIALIZED ANNOTATION',
+    keyline: [
+      'Free certification',
+      'Expert video evaluation',
+      'Access to paid projects',
+    ],
     cta1: 'Reserve your seat',
     cta2: 'What you’ll learn',
     progName: 'The program',
@@ -142,7 +162,7 @@ const COPY = {
       {
         num: 'REEL 03',
         title: 'The certificate',
-        desc: 'A verifiable Cinematic Generative-Video Evaluator certificate —for your LinkedIn and your CV— and entry to Aurum’s talent pool, where the projects paid in dollars come from.',
+        desc: 'A verifiable Cinematic Generative-Video Evaluator certificate —for your LinkedIn and your CV— and entry to Aurum’s talent network, where the projects paid in dollars come from.',
       },
     ],
     howName: 'How it works',
@@ -156,7 +176,7 @@ const COPY = {
     certName: 'First certification',
     ticketLabel: 'CERTIFICATION 01 · WORKFLOW 01',
     ticketBody:
-      'Two AI-generated videos, side by side. You decide which one delivers better and explain why, with clear Codex criteria. It’s Aurum’s first certification — and your entry to the pool.',
+      'Two AI-generated videos, side by side. You decide which one delivers better and explain why, with clear Codex criteria. It’s Aurum’s first certification — and your entry to the evaluator network.',
     ticketStamp: 'COMING SOON',
     ticketNote: 'THE TEAM IS LOADING THE PROJECTOR',
     signName: 'Private screening',
@@ -329,6 +349,14 @@ export default function AcademyApp() {
     return () => cancelAnimationFrame(id)
   }, [lang])
 
+  useEffect(() => {
+    const seo = SEO[lang] ?? SEO.es
+    document.title = seo.title
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute('content', seo.description)
+  }, [lang])
+
   const submit = (e) => {
     e.preventDefault()
     if (form.website) return // honeypot: silently drop bot submissions
@@ -399,7 +427,11 @@ export default function AcademyApp() {
               </span>
             </h1>
             <p className="acad-hero-sub">{t.heroSub}</p>
-            <span className="acad-keyline">{t.keyline}</span>
+            <div className="acad-keyline" aria-label={t.keyline.join(', ')}>
+              {t.keyline.map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
             <div className="hero-ctas">
               <a className="btn btn--gold" href="#anotarse">
                 {t.cta1}

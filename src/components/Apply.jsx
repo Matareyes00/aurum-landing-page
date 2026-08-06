@@ -10,11 +10,10 @@ const COPY = {
     h2em: 'abierto',
     body: (
       <>
-        Contanos quién sos y qué mirás. Buscamos{' '}
-        <strong>ojo formado en la práctica real</strong> —set, isla de edición, sala de
-        color, sonido, dirección o estudio serio del lenguaje audiovisual—. Sin diplomas
-        perfectos: oficio, hambre y amor por la imagen. Te responde una persona del
-        equipo.
+        Si ya tenés oficio en set, montaje, color, sonido o dirección, podés aplicar
+        directo. Buscamos <strong>ojo formado en la práctica real</strong>, no diplomas
+        perfectos. Si todavía querés entrenar y certificar tu criterio, Academy es tu
+        puerta de entrada. En ambos casos, te responde una persona del equipo.
       </>
     ),
     mail1a: 'También podés escribirnos directo: ',
@@ -56,11 +55,10 @@ const COPY = {
     h2em: 'open',
     body: (
       <>
-        Tell us who you are and what you look at. We want{' '}
-        <strong>an eye shaped by real practice</strong> —set, edit bay, color suite,
-        sound, directing or serious study of the audiovisual language—. No perfect
-        diplomas needed: craft, hunger and love for the image. A person from the team
-        replies.
+        If you already have experience on set, in editing, color, sound or directing,
+        you can apply directly. We want <strong>an eye shaped by real practice</strong>,
+        not perfect diplomas. If you still want to train and certify your judgment,
+        Academy is your way in. Either way, a person from the team replies.
       </>
     ),
     mail1a: 'You can also write to us directly: ',

@@ -29,6 +29,19 @@ const prefersReduced =
 const skipIntro =
   prefersReduced || (typeof window !== 'undefined' && !!window.location.hash)
 
+const SEO = {
+  es: {
+    title: 'AURUM — Evaluación experta de video generativo',
+    description:
+      'Cineastas convierten su criterio en datos que mejoran modelos de video. Trabajo remoto, formación gratuita y proyectos pagos en dólares.',
+  },
+  en: {
+    title: 'AURUM — Expert generative-video evaluation',
+    description:
+      'Filmmakers turn their judgment into data that improves video models. Remote work, free training and projects paid in dollars.',
+  },
+}
+
 export default function App() {
   const [revealed, setRevealed] = useState(skipIntro)
   const [identDone, setIdentDone] = useState(skipIntro)
@@ -130,6 +143,14 @@ export default function App() {
     // Text length changes between languages; recompute pin/scroll distances.
     const id = requestAnimationFrame(() => ScrollTrigger.refresh())
     return () => cancelAnimationFrame(id)
+  }, [lang])
+
+  useEffect(() => {
+    const seo = SEO[lang] ?? SEO.es
+    document.title = seo.title
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute('content', seo.description)
   }, [lang])
 
   const handleReveal = useCallback(() => setRevealed(true), [])

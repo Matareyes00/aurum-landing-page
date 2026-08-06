@@ -6,34 +6,34 @@ import { useCopy } from '../i18n'
 
 const COPY = {
   es: {
-    descriptor: 'Criterio de cine para la era del video generativo',
+    descriptor: 'Evaluación experta de video generativo',
     thesis1: 'La máquina ya aprendió a generar.',
     thesis2a: 'Todavía no aprendió a ',
     thesis2em: 'mirar',
     sub: (
       <>
-        Fotografía, montaje, color y sonido evaluando video generativo con rigor de
-        oficio. <strong>Pagado en dólares</strong>, para financiar lo que de verdad
-        querés filmar.
+        Cineastas de fotografía, montaje, color y sonido convierten su criterio en datos
+        que mejoran modelos de video. <strong>Trabajo remoto, pagado en dólares</strong>,
+        para financiar lo que de verdad querés filmar.
       </>
     ),
-    cta1: 'Quiero ser parte',
+    cta1: 'Conocer Academy',
     cta2: 'Ver cómo funciona',
     rolling: 'Rodando',
   },
   en: {
-    descriptor: 'Film-grade judgment for the generative video era',
+    descriptor: 'Expert generative-video evaluation',
     thesis1: 'The machine already learned to generate.',
     thesis2a: 'It hasn’t yet learned to ',
     thesis2em: 'see',
     sub: (
       <>
-        Cinematography, editing, color and sound evaluating generative video with the
-        rigor of the craft. <strong>Paid in dollars</strong>, to fund what you truly
-        want to film.
+        Filmmakers in cinematography, editing, color and sound turn their judgment into
+        data that improves video models. <strong>Remote work, paid in dollars</strong>,
+        to fund what you truly want to film.
       </>
     ),
-    cta1: 'I want in',
+    cta1: 'Discover Academy',
     cta2: 'See how it works',
     rolling: 'Rolling',
   },
@@ -122,7 +122,7 @@ export default function Hero({ started, reduced }) {
         </p>
         <p className="hero-sub">{copy.sub}</p>
         <div className="hero-ctas">
-          <a className="btn btn--gold" href="#aplicar">
+          <a className="btn btn--gold" href="/academy/">
             {copy.cta1}
           </a>
           <a className="btn btn--ghost" href="#trabajo">

@@ -81,14 +81,15 @@ textarea {
 
 .label {
   font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.32em;
+  font-size: clamp(0.68rem, 0.8vw, 0.74rem);
+  line-height: 1.5;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--gold);
 }
 
 .label--dim {
-  color: var(--faint);
+  color: rgba(162, 149, 127, 0.78);
 }
 
 .gold-text {
@@ -818,9 +819,9 @@ textarea {
 .scene-name {
   font-family: var(--mono);
   font-size: 0.72rem;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--faint);
+  color: rgba(162, 149, 127, 0.78);
   white-space: nowrap;
 }
 
@@ -1413,8 +1414,10 @@ textarea {
 }
 
 .credits-sub {
-  color: var(--faint);
-  font-size: 0.66rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
   margin-bottom: 3rem;
 }
 
@@ -1426,7 +1429,7 @@ textarea {
   border-bottom: 1px solid rgba(212, 169, 78, 0.1);
 }
 
-.credit-row .credit-role { color: var(--faint); }
+.credit-row .credit-role { color: var(--muted); }
 .credit-row .credit-name { color: var(--ivory); }
 .credit-row.credit-row--gold .credit-name { color: var(--gold); }
 
@@ -1574,9 +1577,11 @@ textarea {
 
 .form-note {
   font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  color: var(--faint);
+  max-width: 34rem;
+  font-size: 0.68rem;
+  line-height: 1.6;
+  letter-spacing: 0.1em;
+  color: rgba(162, 149, 127, 0.82);
 }
 
 /* ---------- footer ---------- */
@@ -2373,22 +2378,22 @@ textarea {
 
 .ticket-note {
   font-family: var(--mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.26em;
-  color: var(--faint);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  color: var(--muted);
   text-align: center;
-  max-width: 16em;
-  line-height: 1.9;
+  max-width: 20em;
+  line-height: 1.7;
 }
 
 /* ---------- field hint ---------- */
 
 .field-hint {
   font-family: var(--mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
   line-height: 1.7;
-  color: var(--faint);
+  color: rgba(162, 149, 127, 0.82);
 }
 
 /* ---------- nav density ---------- */
@@ -2706,15 +2711,46 @@ textarea {
 
 /* quiet the mono eyebrows so the serif leads */
 .acad-soon {
-  font-size: 0.56rem;
-  letter-spacing: 0.34em;
-  color: var(--faint);
+  font-size: clamp(0.64rem, 0.8vw, 0.72rem);
+  letter-spacing: 0.22em;
+  line-height: 1.5;
+  color: var(--muted);
 }
 
 .acad-keyline {
-  letter-spacing: 0.32em;
-  color: var(--faint);
+  max-width: 54rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem 1rem;
+  font-size: clamp(0.68rem, 0.9vw, 0.78rem);
+  line-height: 1.7;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(241, 233, 218, 0.72);
   text-wrap: balance;
+}
+
+.acad-keyline span {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.acad-keyline span:not(:last-child)::after {
+  content: '·';
+  margin-left: 1rem;
+  color: var(--gold);
+}
+
+@media (max-width: 620px) {
+  .acad-keyline {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .acad-keyline span:not(:last-child)::after { display: none; }
 }
 
 .acad-title-academy {
