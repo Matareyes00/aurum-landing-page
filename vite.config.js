@@ -12,6 +12,7 @@ export default defineConfig({
       input: {
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
         academy: fileURLToPath(new URL('./academy/index.html', import.meta.url)),
+        academyApp: fileURLToPath(new URL('./academy/app/index.html', import.meta.url)),
       },
     },
   },

@@ -32,6 +32,7 @@ const COPY = {
   es: {
     navBack: 'Volver a la sala',
     navCta: 'Reservar butaca',
+    navPortal: 'El Aula',
     heroSoon: 'PRIMERA COHORTE · CERTIFICACIÓN GRATUITA',
     h1a: 'El nuevo oficio',
     h1b: 'de ',
@@ -119,6 +120,7 @@ const COPY = {
   en: {
     navBack: 'Back to the theater',
     navCta: 'Reserve a seat',
+    navPortal: 'The Classroom',
     heroSoon: 'FIRST COHORT · FREE CERTIFICATION',
     h1a: 'The new craft',
     h1b: 'of ',
@@ -395,6 +397,7 @@ export default function AcademyApp() {
         </a>
         <div className="nav-links">
           <a href="/">{t.navBack}</a>
+          <a href="/academy/app/">{t.navPortal}</a>
           <LangToggle className="nav-lang" />
           <a className="nav-cta" href="#anotarse">
             {t.navCta}
