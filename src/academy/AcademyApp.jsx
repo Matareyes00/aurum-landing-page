@@ -9,7 +9,13 @@ import LangToggle from '../components/LangToggle'
 import { scramble } from '../fx/scramble'
 import { useCopy, useLang } from '../i18n'
 
-gsap.registerPlugin(ScrollTrigger)
+let hasRegisteredScrollTrigger = false
+
+function ensureScrollTrigger() {
+  if (hasRegisteredScrollTrigger) return
+  gsap.registerPlugin(ScrollTrigger)
+  hasRegisteredScrollTrigger = true
+}
 
 const prefersReduced =
   typeof window !== 'undefined' &&
@@ -218,6 +224,7 @@ export default function AcademyApp() {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
     if (!window.location.hash) window.scrollTo(0, 0)
     if (prefersReduced) return
+    ensureScrollTrigger()
 
     const lenis = new Lenis({ lerp: 0.09, smoothWheel: true })
     lenisRef.current = lenis
@@ -276,6 +283,7 @@ export default function AcademyApp() {
 
   useLayoutEffect(() => {
     if (prefersReduced) return
+    ensureScrollTrigger()
     const ctx = gsap.context(() => {
       gsap
         .timeline({ onComplete: () => setGatesDone(true) })
