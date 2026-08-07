@@ -316,7 +316,12 @@ function load() {
     /* ignore */
   }
   const s = seed()
-  persist(s)
+  try {
+    // Initial bootstrap must not call persist(): `db` is still initializing.
+    window.localStorage.setItem(DB_KEY, JSON.stringify(s))
+  } catch {
+    /* ignore */
+  }
   return s
 }
 
