@@ -19,6 +19,12 @@ export default function Login() {
     // on success, PortalApp re-renders via the auth store.
   }
 
+  const useDemo = (nextUsername) => {
+    setUsername(nextUsername)
+    setPassword(nextUsername === 'admin' ? 'admin' : 'alumno')
+    setError('')
+  }
+
   return (
     <div className="login-screen">
       <div className="login-atmos" aria-hidden="true">
@@ -79,8 +85,10 @@ export default function Login() {
 
         <div className="login-hint">
           <span>Acceso de prueba</span>
-          <code>admin / admin</code>
-          <code>alumno / alumno</code>
+          <div className="login-demo-options">
+            <button type="button" onClick={() => useDemo('admin')}>Gestión</button>
+            <button type="button" onClick={() => useDemo('alumno')}>Alumno</button>
+          </div>
         </div>
 
         <a className="login-back" href="/academy/">← Volver a Aurum Academy</a>

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { updateUser, useDb, getAssignments, courseById, courseCompletion } from '../data'
+import { updateUser, useDb, getAssignments, getProgress, courseById, courseCompletion } from '../data'
 import { Avatar, Field, Eyebrow, ProgressBar } from './ui'
 import { IconCheck, IconStar } from '../icons'
+import Certificate from './Certificate'
 
 export default function ProfileView({ user }) {
   useDb()
@@ -12,6 +13,7 @@ export default function ProfileView({ user }) {
     bio: user.bio || '',
   })
   const [saved, setSaved] = useState(false)
+  const [selectedCertificate, setSelectedCertificate] = useState(null)
 
   useEffect(() => {
     setForm({ name: user.name, craft: user.craft || '', email: user.email || '', bio: user.bio || '' })
@@ -31,14 +33,23 @@ export default function ProfileView({ user }) {
   const isAdmin = user.role === 'admin'
   const assigned = isAdmin ? [] : getAssignments(user.id).map(courseById).filter(Boolean)
   const certificates = assigned
-    .map((c) => ({ course: c, ...courseCompletion(user.id, c.id) }))
+    .map((c) => ({ course: c, ...courseCompletion(user.id, c.id), completedAt: getProgress(user.id, c.id).completedAt }))
     .filter((c) => c.completed)
 
   return (
     <div className="view view--profile">
-      <header className="view-hero">
-        <Eyebrow>Tu ficha</Eyebrow>
-        <h1 className="view-title">Perfil</h1>
+      <header className="view-hero profile-hero">
+        <div>
+          <Eyebrow>Tu ficha de sala</Eyebrow>
+          <h1 className="view-title">Perfil</h1>
+          <p className="view-lede">Tu identidad profesional, tu recorrido y las credenciales que ya firmaste.</p>
+        </div>
+        {!isAdmin ? (
+          <div className="profile-hero-stats" aria-label="Resumen del perfil">
+            <span><strong>{assigned.length}</strong> cursos</span>
+            <span><strong>{certificates.length}</strong> certificados</span>
+          </div>
+        ) : null}
       </header>
 
       <div className="profile-grid">
@@ -90,6 +101,9 @@ export default function ProfileView({ user }) {
                       <strong>{c.course.title}</strong>
                       <span>Evaluador certificado · {c.course.code}</span>
                     </div>
+                    <button className="link-btn" type="button" onClick={() => setSelectedCertificate(c)}>
+                      Ver
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -119,6 +133,15 @@ export default function ProfileView({ user }) {
           ) : null}
         </aside>
       </div>
+
+      {selectedCertificate ? (
+        <Certificate
+          user={user}
+          course={selectedCertificate.course}
+          completedAt={selectedCertificate.completedAt}
+          onClose={() => setSelectedCertificate(null)}
+        />
+      ) : null}
     </div>
   )
 }

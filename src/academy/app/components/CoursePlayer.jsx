@@ -15,6 +15,7 @@ import {
   IconArrowRight,
   IconStar,
 } from '../icons'
+import Certificate from './Certificate'
 
 function Section({ section }) {
   switch (section.type) {
@@ -107,6 +108,7 @@ export default function CoursePlayer({ user, courseId }) {
   const [selected, setSelected] = useState(null)
   const [feedback, setFeedback] = useState('idle')
   const [finished, setFinished] = useState(false)
+  const [certificateOpen, setCertificateOpen] = useState(false)
 
   const progress = getProgress(user.id, courseId)
   const lastIndex = course ? course.modules.length - 1 : 0
@@ -303,6 +305,9 @@ export default function CoursePlayer({ user, courseId }) {
               paso más hacia la red de evaluadores de Aurum.
             </p>
             <div className="finish-actions">
+              <button className="btn btn--gold" type="button" onClick={() => setCertificateOpen(true)}>
+                Ver certificado <IconStar size={15} />
+              </button>
               <button className="btn btn--gold" type="button" onClick={() => navigate('/cursos')}>
                 Volver a cursos <IconArrowRight size={15} />
               </button>
@@ -312,6 +317,15 @@ export default function CoursePlayer({ user, courseId }) {
             </div>
           </div>
         </div>
+      ) : null}
+
+      {certificateOpen ? (
+        <Certificate
+          user={user}
+          course={course}
+          completedAt={getProgress(user.id, courseId).completedAt}
+          onClose={() => setCertificateOpen(false)}
+        />
       ) : null}
     </div>
   )

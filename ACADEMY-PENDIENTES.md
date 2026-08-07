@@ -37,19 +37,24 @@ implementada en `src/academy/app/`.
   anotable, ejercicio de evaluación real A/B con clips).
 
 ### 5. Certificados
-- HOY: al completar un curso se muestra un "certificado" en pantalla y aparece en el
-  perfil.
-- LUEGO: certificado verificable (PDF/URL única), badge para LinkedIn, y conexión con
-  la "red de evaluadores" (pool) para habilitar proyectos pagos.
+- HOY: al completar un curso se genera una credencial visual con nombre, programa,
+  fecha e ID determinístico. Se puede volver a abrir desde el perfil e imprimir o
+  guardar como PDF.
+- LUEGO: validación pública del ID mediante URL única, badge para LinkedIn, firma del
+  lado servidor y conexión con la "red de evaluadores" (pool) para habilitar proyectos
+  pagos.
 
 ## Mejoras menores / nice-to-have
 - Roles más granulares (instructor, revisor) además de admin/student.
 - Notificaciones cuando el equipo asigna un curso nuevo.
 - Búsqueda y filtros en el catálogo cuando haya muchos cursos.
-- Estados de carga/animaciones de transición entre vistas (GSAP), respetando
+- [HECHO] Animaciones de transición entre vistas y modales, respetando
   `prefers-reduced-motion`.
 - Métricas de avance para el admin (tiempo por módulo, tasa de aprobación del quiz).
-- Recordar el último curso/módulo abierto al reingresar.
+- [HECHO] Recordar el último curso/módulo abierto al reingresar mediante el progreso
+  persistido en `localStorage`.
+- [HECHO] Polish visual del portal: superficies glass, luz reactiva al cursor,
+  interacciones, login editorial, marca más legible y perfil con mayor jerarquía.
 
 ## Cómo probar el MVP (cuando haya red)
 1. `npm install` y `npm run dev`.

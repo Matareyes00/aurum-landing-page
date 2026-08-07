@@ -1,5 +1,7 @@
+import { useEffect, useRef } from 'react'
 import { useAuth } from './auth'
 import { useRoute } from './router'
+import CursorFrame from '../../fx/CursorFrame'
 import Login from './components/Login'
 import Shell from './components/Shell'
 import HomeView from './components/HomeView'
@@ -8,11 +10,36 @@ import CoursePlayer from './components/CoursePlayer'
 import ProfileView from './components/ProfileView'
 import AdminView from './components/AdminView'
 
+const prefersReduced =
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
 export default function PortalApp() {
   const user = useAuth()
   const route = useRoute()
+  const lightRef = useRef(null)
 
-  if (!user) return <Login />
+  useEffect(() => {
+    if (prefersReduced || !window.matchMedia('(pointer: fine)').matches) return
+    const light = lightRef.current
+    const onMove = (event) => {
+      light.style.setProperty('--mx', `${event.clientX}px`)
+      light.style.setProperty('--my', `${event.clientY}px`)
+      light.classList.add('is-on')
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    return () => window.removeEventListener('pointermove', onMove)
+  }, [])
+
+  if (!user) {
+    return (
+      <>
+        <CursorFrame reduced={prefersReduced} />
+        <div className="cursor-light portal-cursor-light" ref={lightRef} />
+        <Login />
+      </>
+    )
+  }
 
   const isAdmin = user.role === 'admin'
 
@@ -36,8 +63,12 @@ export default function PortalApp() {
   }
 
   return (
-    <Shell user={user}>
-      {view}
-    </Shell>
+    <>
+      <CursorFrame reduced={prefersReduced} />
+      <div className="cursor-light portal-cursor-light" ref={lightRef} />
+      <Shell user={user}>
+        <div className="portal-route" key={`${route.name}:${route.id || ''}`}>{view}</div>
+      </Shell>
+    </>
   )
 }
