@@ -13,6 +13,11 @@ import { IconCheck, IconPlus } from '../icons'
 export default function AdminView() {
   useDb()
   const students = getUsers().filter((u) => u.role === 'student')
+  const totalAssignments = students.reduce((total, student) => total + getAssignments(student.id).length, 0)
+  const completedCourses = students.reduce(
+    (total, student) => total + getAssignments(student.id).filter((courseId) => courseCompletion(student.id, courseId).completed).length,
+    0,
+  )
 
   return (
     <div className="view view--admin">
@@ -23,6 +28,12 @@ export default function AdminView() {
           Asigná cursos y seguí el avance de cada alumno. Los cambios se guardan al instante.
         </p>
       </header>
+
+      <section className="admin-overview" aria-label="Resumen de gestión">
+        <div><strong>{students.length}</strong><span>Alumnos activos</span></div>
+        <div><strong>{totalAssignments}</strong><span>Asignaciones</span></div>
+        <div><strong>{completedCourses}</strong><span>Certificaciones</span></div>
+      </section>
 
       <div className="admin-list">
         {students.map((student) => {

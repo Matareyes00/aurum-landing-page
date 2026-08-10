@@ -18,13 +18,19 @@ export default function CoursesView({ user }) {
   return (
     <div className="view view--courses">
       <header className="view-hero">
-        <Eyebrow>{isAdmin ? 'Catálogo completo' : 'Tu programa'}</Eyebrow>
-        <h1 className="view-title">Cursos</h1>
-        <p className="view-lede">
-          {isAdmin
-            ? 'Todos los cursos disponibles en Aurum Academy.'
-            : 'Los cursos que el equipo te asignó. Cada uno te acerca a la certificación y a la red de evaluadores.'}
-        </p>
+        <div>
+          <Eyebrow>{isAdmin ? 'Catálogo completo' : 'Tu programa'}</Eyebrow>
+          <h1 className="view-title">Cursos</h1>
+          <p className="view-lede">
+            {isAdmin
+              ? 'Todos los cursos disponibles en Aurum Academy.'
+              : 'Los cursos que el equipo te asignó. Cada uno te acerca a la certificación y a la red de evaluadores.'}
+          </p>
+        </div>
+        <div className="courses-summary" aria-label={`${courses.length} cursos disponibles`}>
+          <strong>{String(courses.length).padStart(2, '0')}</strong>
+          <span>{courses.length === 1 ? 'curso disponible' : 'cursos disponibles'}</span>
+        </div>
       </header>
 
       {courses.length === 0 ? (

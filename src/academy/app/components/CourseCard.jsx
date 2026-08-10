@@ -9,6 +9,11 @@ export default function CourseCard({ course, percent = 0, completed = false, sta
       <span className="panel-corners" aria-hidden="true">
         <span /><span /><span /><span />
       </span>
+      <div className="course-card-visual" aria-hidden="true">
+        <span className="course-card-edition">Aurum Academy · Programa</span>
+        <span className="course-card-mark">{course.code.split(' ')[0]}</span>
+        <span className="course-card-number">{course.code.split(' ')[1] || '01'}</span>
+      </div>
       <header className="course-card-head">
         <span className="course-card-code">{course.code}</span>
         {completed ? (

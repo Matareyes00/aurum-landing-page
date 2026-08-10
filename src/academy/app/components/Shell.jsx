@@ -38,10 +38,13 @@ export default function Shell({ user, children }) {
 
       <header className="pnav">
         <button className="pnav-brand" type="button" onClick={() => navigate('/')} aria-label="Aurum Academy — Inicio">
-          <img src="/symbol-small.png" alt="" />
+          <span className="pnav-brand-symbol" aria-hidden="true">
+            <img src="/symbol-mid.png" alt="" />
+          </span>
           <span className="pnav-brand-word">
             <img src="/aurum-word.png" alt="AURUM" />
-            <span className="pnav-academy">ACADEMY</span>
+            <span className="pnav-brand-divider" aria-hidden="true" />
+            <span className="pnav-academy">Academy</span>
           </span>
         </button>
 
