@@ -119,8 +119,7 @@ export default function CoursePlayer({ user, courseId }) {
     if (!progress.startedAt) {
       setProgress(user.id, courseId, { startedAt: Date.now() })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [courseId, course])
+  }, [courseId, course, progress.startedAt, user.id])
 
   useEffect(() => {
     setSelected(null)
