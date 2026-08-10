@@ -70,15 +70,17 @@ export default function Certificate({ user, course, completedAt, onClose }) {
 
           <header className="certificate-brand">
             <div className="certificate-lockup">
-              <img src="/symbol-small.png" alt="" />
-              <div>
+              <span className="certificate-lockup-symbol" aria-hidden="true">
+                <img src="/symbol-mid.png" alt="" />
+              </span>
+              <div className="certificate-lockup-copy">
                 <img src="/aurum-word.png" alt="Aurum" />
-                <span>ACADEMY</span>
+                <span>Academy</span>
               </div>
             </div>
             <div className="certificate-slate" aria-label="Metadatos de la credencial">
-              <span>AURUM ORIGINAL</span>
-              <strong>FINAL FRAME / 01</strong>
+              <span>EDICIÓN CERTIFICADA</span>
+              <strong>CREDENCIAL INTERNA / 01</strong>
             </div>
           </header>
 
@@ -104,11 +106,11 @@ export default function Certificate({ user, course, completedAt, onClose }) {
               </div>
               <div>
                 <span>DISCIPLINA</span>
-                <strong>AI MOTION PICTURE</strong>
+                <strong>EVALUACIÓN AUDIOVISUAL IA</strong>
               </div>
               <div>
                 <span>ESTÁNDAR</span>
-                <strong>AURUM / CINEMA</strong>
+                <strong>AURUM QUALITY / AQS-01</strong>
               </div>
             </aside>
           </main>
@@ -119,8 +121,14 @@ export default function Certificate({ user, course, completedAt, onClose }) {
               <strong>{formatDate(completedAt)}</strong>
             </div>
             <div className="certificate-signature">
-              <span>AUTORIDAD ACADÉMICA</span>
-              <strong>Aurum Visual</strong>
+              <span>VALIDACIÓN INSTITUCIONAL</span>
+              <div className="certificate-authority">
+                <img src="/symbol-small.png" alt="" />
+                <div>
+                  <strong>Aurum Academy</strong>
+                  <small>Dirección académica · Emisor</small>
+                </div>
+              </div>
             </div>
             <div className="certificate-credential">
               <span>CREDENCIAL</span>
