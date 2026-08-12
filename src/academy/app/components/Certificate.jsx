@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { IconCheck, IconPrint } from '../icons'
 
 function credentialId(userId, courseId, completedAt) {
@@ -25,7 +26,12 @@ export default function Certificate({ user, course, completedAt, onClose }) {
 
   useEffect(() => {
     const previousFocus = document.activeElement
+    const previousOverflow = document.body.style.overflow
+    const previousPaddingRight = document.body.style.paddingRight
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
     const focusable = dialogRef.current?.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])') || []
+    document.body.style.overflow = 'hidden'
+    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`
     focusable[0]?.focus()
 
     const onKeyDown = (event) => {
@@ -44,13 +50,29 @@ export default function Certificate({ user, course, completedAt, onClose }) {
     window.addEventListener('keydown', onKeyDown)
     return () => {
       window.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = previousOverflow
+      document.body.style.paddingRight = previousPaddingRight
       previousFocus?.focus()
     }
   }, [onClose])
 
-  return (
-    <div ref={dialogRef} className="certificate-overlay" role="dialog" aria-modal="true" aria-label="Certificado de finalización">
-      <div className="certificate-shell">
+  return createPortal(
+    <div
+      ref={dialogRef}
+      className="certificate-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Certificado de finalización"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
+    >
+      <div
+        className="certificate-shell"
+        onMouseDown={(event) => {
+          if (event.target === event.currentTarget) onClose()
+        }}
+      >
         <div className="certificate-actions">
           <span>Credencial lista</span>
           <button className="btn btn--gold" type="button" onClick={() => window.print()}>
@@ -137,6 +159,7 @@ export default function Certificate({ user, course, completedAt, onClose }) {
           </footer>
         </article>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

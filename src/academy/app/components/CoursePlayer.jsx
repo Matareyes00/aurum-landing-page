@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { navigate } from '../router'
 import {
   useDb,
@@ -109,6 +110,8 @@ export default function CoursePlayer({ user, courseId }) {
   const [feedback, setFeedback] = useState('idle')
   const [finished, setFinished] = useState(false)
   const [certificateOpen, setCertificateOpen] = useState(false)
+  const readerBodyRef = useRef(null)
+  const finishRef = useRef(null)
 
   const progress = getProgress(user.id, courseId)
   const lastIndex = course ? course.modules.length - 1 : 0
@@ -124,7 +127,37 @@ export default function CoursePlayer({ user, courseId }) {
   useEffect(() => {
     setSelected(null)
     setFeedback('idle')
+    readerBodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
   }, [currentIndex])
+
+  useEffect(() => {
+    if (!finished) return undefined
+    const previousOverflow = document.body.style.overflow
+    const previousFocus = document.activeElement
+    const focusable = finishRef.current?.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])') || []
+    document.body.style.overflow = 'hidden'
+    focusable[0]?.focus()
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setFinished(false)
+      if (event.key !== 'Tab' || focusable.length === 0) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = previousOverflow
+      previousFocus?.focus()
+    }
+  }, [finished])
 
   if (!course) {
     return (
@@ -203,6 +236,11 @@ export default function CoursePlayer({ user, courseId }) {
     setFeedback('idle')
   }
 
+  const openCertificate = () => {
+    setFinished(false)
+    setCertificateOpen(true)
+  }
+
   return (
     <div className="course-workspace">
       <aside className="course-map">
@@ -253,7 +291,7 @@ export default function CoursePlayer({ user, courseId }) {
           <button className="link-btn" type="button" onClick={doReset}>Reiniciar</button>
         </header>
 
-        <div className="reader-body">
+        <div className="reader-body" ref={readerBodyRef}>
           <article className="reader-article">
             <div className="reader-modlabel">
               <span>{module.tag}</span>
@@ -292,9 +330,18 @@ export default function CoursePlayer({ user, courseId }) {
         </footer>
       </section>
 
-      {finished ? (
-        <div className="finish-overlay" role="dialog" aria-modal="true">
-          <div className="finish-modal">
+      {finished ? createPortal(
+        <div
+          ref={finishRef}
+          className="finish-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Curso finalizado"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setFinished(false)
+          }}
+        >
+          <div className="finish-modal" onMouseDown={(event) => event.stopPropagation()}>
             <span className="panel-corners" aria-hidden="true"><span /><span /><span /><span /></span>
             <span className="finish-badge"><IconStar size={26} /></span>
             <span className="finish-eyebrow">Certificado · {course.code}</span>
@@ -304,7 +351,7 @@ export default function CoursePlayer({ user, courseId }) {
               paso más hacia la red de evaluadores de Aurum.
             </p>
             <div className="finish-actions">
-              <button className="btn btn--gold" type="button" onClick={() => setCertificateOpen(true)}>
+              <button className="btn btn--gold" type="button" onClick={openCertificate}>
                 Ver certificado <IconStar size={15} />
               </button>
               <button className="btn btn--gold" type="button" onClick={() => navigate('/cursos')}>
@@ -315,7 +362,8 @@ export default function CoursePlayer({ user, courseId }) {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       ) : null}
 
       {certificateOpen ? (

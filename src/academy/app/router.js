@@ -43,6 +43,7 @@ export function useRoute() {
 
 export function navigate(path) {
   if (typeof window === 'undefined') return
+  window.scrollTo(0, 0)
   const next = path.startsWith('#') ? path : `#${path}`
   if (window.location.hash === next) {
     listeners.forEach((fn) => fn())

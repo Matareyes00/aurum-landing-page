@@ -20,6 +20,10 @@ export default function PortalApp() {
   const lightRef = useRef(null)
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [route.name, route.id])
+
+  useEffect(() => {
     if (prefersReduced || !window.matchMedia('(pointer: fine)').matches) return
     const light = lightRef.current
     const onMove = (event) => {
