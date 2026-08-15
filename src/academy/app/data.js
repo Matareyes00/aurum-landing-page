@@ -1,4 +1,9 @@
-import { useSyncExternalStore } from 'react'
+import {
+  getDb,
+  subscribe as subscribeStore,
+  transact,
+  useDb as useStoreDb,
+} from './store'
 
 /* ------------------------------------------------------------------ *
  * Aurum Academy — mock data layer (localStorage).
@@ -325,25 +330,21 @@ function load() {
   return s
 }
 
-let db = load()
+let db = getDb()
+subscribeStore(() => {
+  db = getDb()
+})
 
 function persist(next) {
-  db = next
-  try {
-    window.localStorage.setItem(DB_KEY, JSON.stringify(next))
-  } catch {
-    /* ignore */
-  }
-  listeners.forEach((fn) => fn())
+  transact(next)
 }
 
 function subscribe(cb) {
-  listeners.add(cb)
-  return () => listeners.delete(cb)
+  return subscribeStore(cb)
 }
 
 export function useDb() {
-  return useSyncExternalStore(subscribe, () => db, () => db)
+  return useStoreDb()
 }
 
 /* ---------------- selectors ---------------- */
@@ -366,7 +367,7 @@ export function findByCredentials(username, password) {
 }
 
 export function getAssignments(userId) {
-  return db.assignments[userId] || []
+  return db.courseAssignments[userId] || []
 }
 
 export function getProgress(userId, courseId) {
@@ -383,20 +384,20 @@ export function updateUser(userId, patch) {
 }
 
 export function assignCourse(userId, courseId) {
-  const current = db.assignments[userId] || []
+  const current = db.courseAssignments[userId] || []
   if (current.includes(courseId)) return
   persist({
     ...db,
-    assignments: { ...db.assignments, [userId]: [...current, courseId] },
+    courseAssignments: { ...db.courseAssignments, [userId]: [...current, courseId] },
   })
 }
 
 export function unassignCourse(userId, courseId) {
-  const current = db.assignments[userId] || []
+  const current = db.courseAssignments[userId] || []
   persist({
     ...db,
-    assignments: {
-      ...db.assignments,
+    courseAssignments: {
+      ...db.courseAssignments,
       [userId]: current.filter((id) => id !== courseId),
     },
   })

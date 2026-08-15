@@ -21,16 +21,22 @@ function parse(hash) {
   const clean = hash.split('?')[0]
   const parts = clean.split('/').filter(Boolean)
   if (parts.length === 0) return { name: 'home', id: null }
-  const [head, id = null] = parts
+  const [head, second = null, third = null] = parts
   switch (head) {
     case 'cursos':
       return { name: 'cursos', id: null }
     case 'curso':
-      return { name: 'curso', id }
+      return { name: 'curso', id: second }
+    case 'workflows':
+      return { name: 'workflows', id: null }
+    case 'workflow':
+      return { name: 'workflow', id: second }
+    case 'codex':
+      return { name: 'codex', id: null }
     case 'perfil':
       return { name: 'perfil', id: null }
     case 'admin':
-      return { name: 'admin', id: null }
+      return { name: 'admin', section: second || 'people', id: third }
     default:
       return { name: 'home', id: null }
   }

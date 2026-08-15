@@ -1,0 +1,38 @@
+import { navigate } from '../../router'
+import { getEvaluation } from '../../evaluations'
+import { getTasksForUser } from '../../tasks'
+import { useDb } from '../../store'
+import { workflowById } from '../../workflows'
+import { Eyebrow } from '../ui'
+import { IconArrowRight, IconCheck, IconFilm, IconWorkflow } from '../../icons'
+
+export default function WorkflowQueue({ user }) {
+  useDb()
+  const tasks = getTasksForUser(user.id, user.role)
+  const pending = tasks.filter((task) => getEvaluation(task.id, user.id)?.status !== 'submitted')
+  const submitted = tasks.filter((task) => getEvaluation(task.id, user.id)?.status === 'submitted')
+
+  const renderGroup = (title, entries, done = false) => (
+    <section className="queue-section">
+      <header className="queue-section-head"><h2>{title}</h2><span>{entries.length}</span></header>
+      {entries.length ? <div className="task-list">{entries.map((task) => {
+        const workflow = workflowById(task.workflowId)
+        const evaluation = getEvaluation(task.id, user.id)
+        return <button className="task-row" type="button" key={task.id} onClick={() => navigate(`/workflow/${task.id}`)}>
+          <span className="task-index">WF{String(workflow.number).padStart(2, '0')}</span>
+          <span className="task-copy"><small>{workflow.title}{task.mode ? ` · ${task.mode.toUpperCase()}` : ''}</small><strong>{task.title}</strong><span>{task.priority}</span></span>
+          <span className={`task-state ${done ? 'is-done' : evaluation ? 'is-draft' : ''}`}>{done ? <><IconCheck size={14} /> Enviada</> : evaluation ? 'Borrador' : 'Nueva'}</span>
+          <IconArrowRight size={17} />
+        </button>
+      })}</div> : <p className="wf-empty">No hay tareas en esta sección.</p>}
+    </section>
+  )
+
+  return <div className="view workflow-queue">
+    <header className="view-hero queue-hero">
+      <div><Eyebrow>Mesa de evaluación</Eyebrow><h1 className="view-title">Workflows</h1><p className="view-lede">Tus asignaciones, el Codex y las herramientas de inspección en un mismo lugar.</p></div>
+      <div className="queue-meter"><IconWorkflow size={24} /><strong>{pending.length}</strong><span>pendientes</span></div>
+    </header>
+    {!tasks.length ? <div className="wf-empty-state"><IconFilm size={28} /><h2>No tenés workflows asignados</h2><p>Cuando el equipo asigne una práctica o evaluación va a aparecer acá.</p></div> : <>{renderGroup('En progreso', pending)}{submitted.length ? renderGroup('Entregadas', submitted, true) : null}</>}
+  </div>
+}

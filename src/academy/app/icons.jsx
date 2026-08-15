@@ -130,3 +130,54 @@ export const IconPrint = (p) => (
     <path d="M6 14h12v7H6z" />
   </Svg>
 )
+
+export const IconWorkflow = (p) => (
+  <Svg {...p}>
+    <circle cx="6" cy="6" r="2" /><circle cx="18" cy="6" r="2" /><circle cx="12" cy="18" r="2" />
+    <path d="M8 6h8M7 8l4 8M17 8l-4 8" />
+  </Svg>
+)
+
+export const IconSearch = (p) => (
+  <Svg {...p}><circle cx="11" cy="11" r="7" /><path d="m16.5 16.5 4 4" /></Svg>
+)
+
+export const IconPause = (p) => (
+  <Svg {...p}><path d="M8 5v14M16 5v14" /></Svg>
+)
+
+export const IconChevronLeft = (p) => (
+  <Svg {...p}><path d="m15 18-6-6 6-6" /></Svg>
+)
+
+export const IconChevronRight = (p) => (
+  <Svg {...p}><path d="m9 18 6-6-6-6" /></Svg>
+)
+
+export const IconRepeat = (p) => (
+  <Svg {...p}><path d="m17 2 4 4-4 4" /><path d="M3 11V9a3 3 0 0 1 3-3h15" /><path d="m7 22-4-4 4-4" /><path d="M21 13v2a3 3 0 0 1-3 3H3" /></Svg>
+)
+
+export const IconZoomIn = (p) => (
+  <Svg {...p}><circle cx="11" cy="11" r="7" /><path d="m16.5 16.5 4 4M11 8v6M8 11h6" /></Svg>
+)
+
+export const IconZoomOut = (p) => (
+  <Svg {...p}><circle cx="11" cy="11" r="7" /><path d="m16.5 16.5 4 4M8 11h6" /></Svg>
+)
+
+export const IconTarget = (p) => (
+  <Svg {...p}><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" /><path d="M9 9h6v6H9z" /></Svg>
+)
+
+export const IconSave = (p) => (
+  <Svg {...p}><path d="M5 3h12l2 2v16H5z" /><path d="M8 3v6h8V3M8 21v-8h8v8" /></Svg>
+)
+
+export const IconTrash = (p) => (
+  <Svg {...p}><path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6" /></Svg>
+)
+
+export const IconSettings = (p) => (
+  <Svg {...p}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1z" /></Svg>
+)
