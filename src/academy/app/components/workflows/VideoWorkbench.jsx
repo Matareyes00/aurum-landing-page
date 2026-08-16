@@ -76,6 +76,13 @@ export default function VideoWorkbench({ task, issues, selectedIssue, onSelectIs
     setCurrentSec(next)
   }
 
+  const handleLoadedMetadata = (event, index, output) => {
+    const video = event.currentTarget
+    const loadedDuration = video.duration || output.durationSec || 0
+    if (index === 0) setDuration(loadedDuration)
+    if (loadedDuration > 0.1 && video.currentTime === 0) video.currentTime = 0.1
+  }
+
   const capture = (output, index) => {
     const video = refs.current[index]
     if (!video) return
@@ -118,10 +125,12 @@ export default function VideoWorkbench({ task, issues, selectedIssue, onSelectIs
                 <video
                   ref={(node) => { refs.current[index] = node }}
                   src={output.src}
+                  poster="/og.png"
                   crossOrigin="anonymous"
                   playsInline
                   preload="metadata"
-                  onLoadedMetadata={(event) => index === 0 && setDuration(event.currentTarget.duration || output.durationSec || 0)}
+                  onLoadedMetadata={(event) => handleLoadedMetadata(event, index, output)}
+                  onSeeked={(event) => event.currentTarget.removeAttribute('poster')}
                   onTimeUpdate={handleTime}
                   onPlay={() => index === 0 && setPlaying(true)}
                   onPause={() => index === 0 && setPlaying(false)}

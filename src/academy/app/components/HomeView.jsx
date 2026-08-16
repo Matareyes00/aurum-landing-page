@@ -10,6 +10,8 @@ import {
 import CourseCard from './CourseCard'
 import { StatPill, Eyebrow } from './ui'
 import { IconArrowRight, IconShield } from '../icons'
+import { getTasksForUser } from '../tasks'
+import { getEvaluation } from '../evaluations'
 
 export default function HomeView({ user }) {
   useDb() // re-render on data changes
@@ -30,6 +32,8 @@ export default function HomeView({ user }) {
     ? Math.round(withProgress.reduce((a, c) => a + c.percent, 0) / withProgress.length)
     : 0
   const resume = withProgress.find((c) => c.started && !c.completed) || withProgress.find((c) => !c.completed)
+  const workflowTasks = getTasksForUser(user.id, user.role)
+  const pendingTasks = workflowTasks.filter((task) => getEvaluation(task.id, user.id)?.status !== 'submitted')
 
   return (
     <div className="view view--home">
@@ -64,6 +68,15 @@ export default function HomeView({ user }) {
           </button>
         </section>
       ) : null}
+
+      <section className="home-workflows-band">
+        <div>
+          <Eyebrow>{isAdmin ? 'Academy operations' : 'Mesa de evaluación'}</Eyebrow>
+          <h2>{isAdmin ? `${workflowTasks.length} tareas activas` : `${pendingTasks.length} workflows pendientes`}</h2>
+          <p>{isAdmin ? 'Configurá asignaciones, media, Codex y resultados.' : 'Inspeccioná video frame a frame con el Codex siempre a mano.'}</p>
+        </div>
+        <button className="wf-btn wf-btn--gold" type="button" onClick={() => navigate(isAdmin ? '/admin/tasks' : '/workflows')}>{isAdmin ? 'Gestionar tareas' : 'Abrir workflows'} <IconArrowRight size={15} /></button>
+      </section>
 
       <section className="home-courses">
         <div className="section-head">

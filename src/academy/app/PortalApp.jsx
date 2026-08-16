@@ -8,7 +8,10 @@ import HomeView from './components/HomeView'
 import CoursesView from './components/CoursesView'
 import CoursePlayer from './components/CoursePlayer'
 import ProfileView from './components/ProfileView'
-import AdminView from './components/AdminView'
+import AdminHub from './components/admin/AdminHub'
+import CodexView from './components/workflows/CodexView'
+import WorkflowQueue from './components/workflows/WorkflowQueue'
+import WorkflowWorkspace from './components/workflows/WorkflowWorkspace'
 
 const prefersReduced =
   typeof window !== 'undefined' &&
@@ -58,8 +61,17 @@ export default function PortalApp() {
     case 'perfil':
       view = <ProfileView user={user} />
       break
+    case 'workflows':
+      view = <WorkflowQueue user={user} />
+      break
+    case 'workflow':
+      view = <WorkflowWorkspace user={user} taskId={route.id} />
+      break
+    case 'codex':
+      view = <CodexView />
+      break
     case 'admin':
-      view = isAdmin ? <AdminView user={user} /> : <HomeView user={user} />
+      view = isAdmin ? <AdminHub route={route} /> : <HomeView user={user} />
       break
     case 'home':
     default:

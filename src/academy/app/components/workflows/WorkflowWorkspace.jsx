@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { navigate } from '../../router'
 import { createEvaluation, exportEvaluation, getEvaluation, saveEvaluation, validateEvaluation } from '../../evaluations'
 import { getTask } from '../../tasks'
@@ -17,7 +17,7 @@ export default function WorkflowWorkspace({ user, taskId }) {
   const [evaluation, setEvaluation] = useState(initial)
   const [issueContext, setIssueContext] = useState(null)
   const [selectedIssue, setSelectedIssue] = useState(null)
-  const [codexOpen, setCodexOpen] = useState(true)
+  const [codexOpen, setCodexOpen] = useState(() => typeof window === 'undefined' || window.innerWidth > 860)
   const [saveState, setSaveState] = useState('idle')
   const [errors, setErrors] = useState([])
   const autoSaveReady = useRef(false)
@@ -56,7 +56,7 @@ export default function WorkflowWorkspace({ user, taskId }) {
     ? db.codex.tags.filter((tag) => config.codexCategories.includes(tag.category))
     : db.codex.tags
   const counts = evaluation.issues.reduce((result, issue) => ({ ...result, [issue.tagId]: (result[issue.tagId] || 0) + 1 }), {})
-  const exportData = useMemo(() => exportEvaluation(task, evaluation), [task, evaluation])
+  const exportData = exportEvaluation(task, evaluation)
 
   const manualSave = () => {
     setSaveState('saving')

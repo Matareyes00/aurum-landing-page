@@ -116,7 +116,7 @@ export function exportEvaluation(task, evaluation) {
     },
     evaluatorId: evaluation.evaluatorId,
     result: evaluation.result,
-    issues: (evaluation.issues || []).map((issue) => {
+    issues: (evaluation.issues || []).map(({ frameDataUrl, ...issue }) => {
       const spatial = issue.spatialAnnotation
       return {
         ...issue,
@@ -138,5 +138,5 @@ export function exportEvaluation(task, evaluation) {
 export function reviewEvaluation(taskId, evaluatorId, reviewStatus, reviewNote = '') {
   const evaluation = getEvaluation(taskId, evaluatorId)
   if (!evaluation) return
-  saveEvaluation({ ...evaluation, status: 'submitted', reviewStatus, reviewNote }, true)
+  saveEvaluation({ ...evaluation, reviewStatus, reviewNote }, reviewStatus !== 'changes_requested')
 }

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import PortalApp from './PortalApp'
 import '../../styles/global.css'
 import './portal.css'
+import './workflows.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

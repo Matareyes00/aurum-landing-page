@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { logout } from '../auth'
 import { navigate, useRoute } from '../router'
 import { Avatar } from './ui'
-import { IconHome, IconBook, IconUser, IconShield, IconLogout } from '../icons'
+import { IconHome, IconBook, IconUser, IconShield, IconLogout, IconWorkflow } from '../icons'
+import { useStorageStatus } from '../store'
 
 function NavLink({ to, active, icon: Icon, children }) {
   return (
@@ -22,6 +23,7 @@ export default function Shell({ user, children }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef(null)
   const isAdmin = user.role === 'admin'
+  const storage = useStorageStatus()
 
   useEffect(() => {
     const onDoc = (e) => {
@@ -51,6 +53,8 @@ export default function Shell({ user, children }) {
         <nav className="pnav-links">
           <NavLink to="/" active={route.name === 'home'} icon={IconHome}>Inicio</NavLink>
           <NavLink to="/cursos" active={route.name === 'cursos' || route.name === 'curso'} icon={IconBook}>Cursos</NavLink>
+          <NavLink to="/workflows" active={route.name === 'workflows' || route.name === 'workflow'} icon={IconWorkflow}>Workflows</NavLink>
+          <NavLink to="/codex" active={route.name === 'codex'} icon={IconBook}>Codex</NavLink>
           <NavLink to="/perfil" active={route.name === 'perfil'} icon={IconUser}>Perfil</NavLink>
           {isAdmin ? (
             <NavLink to="/admin" active={route.name === 'admin'} icon={IconShield}>Gestión</NavLink>
@@ -65,6 +69,7 @@ export default function Shell({ user, children }) {
             aria-expanded={menuOpen}
           >
             <Avatar name={user.name} size={34} gold={isAdmin} />
+            <span className={`storage-dot is-${storage.state}`} title={storage.error || (storage.state === 'saving' ? 'Guardando cambios' : 'Datos locales guardados')} />
             <span className="pnav-user-meta">
               <span className="pnav-user-name">{user.name}</span>
               <span className="pnav-user-role">{isAdmin ? 'Gestión' : user.craft}</span>

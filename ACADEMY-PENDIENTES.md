@@ -6,9 +6,14 @@ implementada en `src/academy/app/`.
 
 ## Contexto del MVP actual
 - Portal en `/academy/app/` (entrada Vite propia), separado de la landing pública.
-- Sin dependencias nuevas (el entorno no puede instalar): router por hash propio,
-  auth mock, datos mock, íconos SVG inline.
-- Todo el estado vive en `localStorage` del navegador.
+- Router por hash propio, autenticación mock e íconos SVG inline.
+- Academy Workflows integra los 10 modos de evaluación, cola por evaluador, workspace
+  de video, Codex, issues con bbox y consola operativa para administradores.
+- `aurum-academy-db:v2` separa usuarios, asignaciones, progreso, configuración,
+  tareas, evaluaciones y Codex. Migra automáticamente desde v1 y sincroniza pestañas.
+- Los videos y capturas no se persisten en `localStorage`; las tareas guardan solo
+  metadata y URLs CORS-safe. Los frames capturados existen únicamente en memoria.
+- Vitest cubre storage, migración, validadores, exportadores y geometría de bbox.
 
 ## Pendientes prioritarios
 
@@ -20,9 +25,10 @@ implementada en `src/academy/app/`.
 
 ### 2. Persistencia / backend
 - HOY: `localStorage` (se pierde al limpiar el navegador; no se comparte entre
-  dispositivos; el "admin" y el "alumno" no ven lo mismo salvo en la misma máquina).
-- LUEGO: base de datos (Supabase/Postgres) con tablas users, courses, modules,
-  enrollments, progress. API para asignar cursos y guardar progreso del lado servidor.
+  dispositivos; el "admin" y el evaluador deben usar el mismo navegador). La capa
+  `storage.js`/`store.js` evita que las vistas dependan directamente del adapter local.
+- LUEGO: API y base de datos con users, courses, workflow assignments, tasks,
+  evaluations, issues, reviews y Codex. Object storage para medios y uploads firmados.
 
 ### 3. Portal bilingüe (ES/EN)
 - HOY: el portal está en español. La landing pública ya es bilingüe.
@@ -31,10 +37,10 @@ implementada en `src/academy/app/`.
 
 ### 4. Autoría de cursos
 - HOY: los cursos están escritos a mano en `src/academy/app/data.js` (2 cursos:
-  "El Codex — Fundamentos" y "Workflow 01 — Preference Evaluation").
+  "El Codex — Fundamentos" y "Workflow 01 — Preference Evaluation"). Los workflows,
+  tareas, rúbricas y Codex sí tienen edición operativa desde Gestión.
 - LUEGO: constructor de cursos para el admin (crear módulos, secciones, quizzes,
-  subir videos/imágenes), o un CMS. Soporte para más tipos de sección (video, imagen
-  anotable, ejercicio de evaluación real A/B con clips).
+  subir videos/imágenes), o un CMS.
 
 ### 5. Certificados
 - HOY: al completar un curso se genera una credencial visual con nombre, programa,
