@@ -3,54 +3,141 @@ import { CODEX_SEED, WORKFLOW_IDS, createWorkflowConfigs } from './workflows'
 export const DB_V1_KEY = 'aurum-academy-db:v1'
 export const DB_V2_KEY = 'aurum-academy-db:v2'
 
-const SAMPLE_VIDEO = 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4'
+// Clips CC0 de MDN. El host viejo (`interactive-examples.mdn.mozilla.net`) está
+// descontinuado; `mdn.github.io/shared-assets` responde con `Access-Control-Allow-Origin: *`,
+// que es lo que necesita `crossOrigin="anonymous"` para capturar frames al canvas.
+const CLIP_FLOWER = {
+  src: 'https://mdn.github.io/shared-assets/videos/flower.mp4',
+  filename: 'flower.mp4',
+  width: 960,
+  height: 540,
+  durationSec: 30,
+}
+const CLIP_FRIDAY = {
+  src: 'https://mdn.github.io/shared-assets/videos/friday.mp4',
+  filename: 'friday.mp4',
+  width: 640,
+  height: 360,
+  durationSec: 12,
+}
 
-function sampleOutput(id, label) {
+// Las dimensiones y la duración reales las sobreescribe el reproductor al leer
+// los metadatos; acá sólo sirven de fallback antes de que cargue el video.
+function sampleOutput(id, label, clip = CLIP_FLOWER) {
   return {
     id,
     label,
-    src: SAMPLE_VIDEO,
-    filename: `sample-${id.toLowerCase()}.mp4`,
+    src: clip.src,
+    filename: clip.filename,
     mime: 'video/mp4',
     fps: 24,
-    width: 960,
-    height: 540,
-    durationSec: 30,
+    width: clip.width,
+    height: clip.height,
+    durationSec: clip.durationSec,
   }
+}
+
+// Consigna por workflow. El material demo es un plano botánico benigno: las
+// tareas están escritas como simulacro sobre ese material, no como casos reales
+// de producción.
+const BRIEFS = {
+  preference_evaluation: {
+    title: 'Jardín en movimiento · Comparación A/B',
+    prompt: 'Cinematic close-up of flowers moving naturally in the wind, stable detail, soft daylight.',
+    objective: 'Elegí qué output responde mejor al prompt y defendé la preferencia con evidencia observable.',
+    priority: 'Adherencia al prompt por encima del atractivo visual.',
+  },
+  single_video_qc: {
+    title: 'Flor al viento · Control de calidad',
+    prompt: 'Cinematic close-up of flowers moving naturally in the wind, stable detail, soft daylight.',
+    objective: 'Puntuá cada dimensión de la rúbrica y registrá los defectos que sostienen el veredicto.',
+    priority: 'Estabilidad del detalle y coherencia del movimiento.',
+  },
+  event_temporal_annotation: {
+    title: 'Movimiento natural · Eventos temporales',
+    prompt: 'Cinematic close-up of flowers moving naturally in the wind, stable detail, soft daylight.',
+    objective: 'Marcá los eventos con su ventana temporal: ráfagas, cambios de foco, entradas y salidas de cuadro.',
+    priority: 'Precisión del timecode antes que cantidad de eventos.',
+  },
+  prompt_adherence: {
+    title: 'Plano botánico · Adherencia al prompt',
+    prompt: 'Cinematic close-up of flowers moving naturally in the wind, stable detail, soft daylight.',
+    objective: 'Verificá elemento por elemento del prompt: encuadre, sujeto, movimiento, luz y nitidez.',
+    priority: 'Un elemento no pedido no compensa uno faltante.',
+  },
+  continuity_coherence: {
+    title: 'Secuencia de naturaleza · Continuidad',
+    prompt: 'Three consecutive shots of the same garden scene, matching light, lens and grade.',
+    objective: 'Revisá cada transición: el material demo incluye un corte que rompe la continuidad a propósito.',
+    priority: 'Identidad de la escena y consistencia de luz entre planos.',
+  },
+  style_consistency: {
+    title: 'Botanical film · Consistencia visual',
+    prompt: 'Cinematic close-up of flowers moving naturally in the wind, stable detail, soft daylight.',
+    objective: 'Evaluá si el tratamiento visual se sostiene de principio a fin del clip.',
+    priority: 'Deriva de color, grano y profundidad de campo.',
+  },
+  audio_visual_sync: {
+    title: 'Naturaleza sonora · Sincronización',
+    prompt: 'Cinematic close-up of flowers in the wind with matching ambient sound design.',
+    objective: 'Medí el desfase entre imagen y sonido. El material demo puede no traer pista de audio: si falta, registralo como hallazgo.',
+    priority: 'Un desfase medido vale más que una impresión.',
+  },
+  physics_behavior: {
+    title: 'Pétalos y viento · Plausibilidad física',
+    prompt: 'Cinematic close-up of flowers moving naturally in the wind, stable detail, soft daylight.',
+    objective: 'Contrastá lo esperado con lo observado en el comportamiento del viento sobre los pétalos.',
+    priority: 'Inercia, peso aparente y dirección del viento.',
+  },
+  safety_compliance: {
+    title: 'Public release · Safety audit',
+    prompt: 'Cinematic close-up of flowers moving naturally in the wind, stable detail, soft daylight.',
+    objective: 'Simulacro de auditoría sobre material benigno: recorré la checklist completa y justificá el nivel de riesgo asignado.',
+    priority: 'El nivel de riesgo siempre se declara, incluso cuando es bajo.',
+  },
+  adversarial_red_team: {
+    title: 'Motion stress test · Red team',
+    prompt: 'Cinematic close-up of flowers moving naturally in the wind, stable detail, soft daylight.',
+    objective: 'Buscá el límite del modelo sobre este material: describí escenario, modo de falla y cómo reproducirlo.',
+    priority: 'Reproducibilidad por encima de espectacularidad.',
+  },
+}
+
+function seedOutputs(workflowId) {
+  // A/B compara dos clips distintos: con el mismo video la preferencia no tiene sentido.
+  if (workflowId === 'preference_evaluation') {
+    return [sampleOutput('A', 'Output A', CLIP_FLOWER), sampleOutput('B', 'Output B', CLIP_FRIDAY)]
+  }
+  // Continuidad: el clip del medio rompe la escena a propósito.
+  if (workflowId === 'continuity_coherence') {
+    return [
+      sampleOutput('C1', 'Clip 1', CLIP_FLOWER),
+      sampleOutput('C2', 'Clip 2', CLIP_FRIDAY),
+      sampleOutput('C3', 'Clip 3', CLIP_FLOWER),
+    ]
+  }
+  return [sampleOutput('A', 'Output', CLIP_FLOWER)]
 }
 
 function seedTasks() {
   const now = new Date(0).toISOString()
-  const titles = {
-    preference_evaluation: 'Jardín en movimiento · Comparación A/B',
-    single_video_qc: 'Flor al viento · Control de calidad',
-    event_temporal_annotation: 'Movimiento natural · Eventos temporales',
-    prompt_adherence: 'Plano botánico · Adherencia al prompt',
-    continuity_coherence: 'Secuencia de naturaleza · Continuidad',
-    style_consistency: 'Botanical film · Consistencia visual',
-    audio_visual_sync: 'Naturaleza sonora · Sincronización',
-    physics_behavior: 'Pétalos y viento · Plausibilidad física',
-    safety_compliance: 'Public release · Safety audit',
-    adversarial_red_team: 'Motion stress test · Red team',
-  }
-  return WORKFLOW_IDS.map((workflowId, index) => ({
-    id: `task-${workflowId}`,
-    workflowId,
-    mode: workflowId === 'preference_evaluation' ? 'ab' : undefined,
-    title: titles[workflowId],
-    status: index < 2 ? 'in_progress' : 'assigned',
-    prompt: 'A cinematic close-up of flowers moving naturally in the wind, with stable detail and soft daylight.',
-    objective: 'Aplicar criterio cinematográfico y producir evidencia estructurada.',
-    priority: index % 2 === 0 ? 'Consistencia temporal y física.' : 'Adherencia y calidad visual.',
-    outputs: workflowId === 'preference_evaluation'
-      ? [sampleOutput('A', 'Output A'), sampleOutput('B', 'Output B')]
-      : workflowId === 'continuity_coherence'
-        ? [sampleOutput('C1', 'Clip 1'), sampleOutput('C2', 'Clip 2'), sampleOutput('C3', 'Clip 3')]
-        : [sampleOutput('A', 'Output')],
-    assignedUserIds: ['u_ana'],
-    createdAt: now,
-    updatedAt: now,
-  }))
+  return WORKFLOW_IDS.map((workflowId, index) => {
+    const brief = BRIEFS[workflowId]
+    return {
+      id: `task-${workflowId}`,
+      workflowId,
+      mode: workflowId === 'preference_evaluation' ? 'ab' : undefined,
+      title: brief.title,
+      status: index < 2 ? 'in_progress' : 'assigned',
+      prompt: brief.prompt,
+      objective: brief.objective,
+      priority: brief.priority,
+      outputs: seedOutputs(workflowId),
+      assignedUserIds: ['u_ana'],
+      createdAt: now,
+      updatedAt: now,
+    }
+  })
 }
 
 export function createSeedDb() {

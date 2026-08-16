@@ -9,9 +9,11 @@ import {
 } from '../data'
 import { Avatar, Eyebrow, ProgressBar } from './ui'
 import { IconCheck, IconPlus } from '../icons'
+import { useCopy, ADMIN_VIEW } from '../copy'
 
 export default function AdminView() {
   useDb()
+  const t = useCopy(ADMIN_VIEW)
   const students = getUsers().filter((u) => u.role === 'student')
   const totalAssignments = students.reduce((total, student) => total + getAssignments(student.id).length, 0)
   const completedCourses = students.reduce(
@@ -22,17 +24,15 @@ export default function AdminView() {
   return (
     <div className="view view--admin">
       <header className="view-hero">
-        <Eyebrow>Panel del equipo</Eyebrow>
-        <h1 className="view-title">Gestión</h1>
-        <p className="view-lede">
-          Asigná cursos y seguí el avance de cada alumno. Los cambios se guardan al instante.
-        </p>
+        <Eyebrow>{t.eyebrow}</Eyebrow>
+        <h1 className="view-title">{t.title}</h1>
+        <p className="view-lede">{t.lede}</p>
       </header>
 
-      <section className="admin-overview" aria-label="Resumen de gestión">
-        <div><strong>{students.length}</strong><span>Alumnos activos</span></div>
-        <div><strong>{totalAssignments}</strong><span>Asignaciones</span></div>
-        <div><strong>{completedCourses}</strong><span>Certificaciones</span></div>
+      <section className="admin-overview" aria-label={t.overviewAria}>
+        <div><strong>{students.length}</strong><span>{t.activeStudents}</span></div>
+        <div><strong>{totalAssignments}</strong><span>{t.assignments}</span></div>
+        <div><strong>{completedCourses}</strong><span>{t.certifications}</span></div>
       </section>
 
       <div className="admin-list">
@@ -49,7 +49,7 @@ export default function AdminView() {
                     <span>{student.craft} · @{student.username}</span>
                   </div>
                 </div>
-                <span className="admin-count">{assigned.length} asignados</span>
+                <span className="admin-count">{assigned.length} {t.assigned}</span>
               </header>
 
               <div className="admin-courses">
@@ -62,9 +62,9 @@ export default function AdminView() {
                         <span className="admin-course-code">{course.code}</span>
                         <strong>{course.title}</strong>
                         {isAssigned ? (
-                          <ProgressBar percent={comp.percent} label={comp.completed ? 'Certificado' : `${comp.percent}%`} />
+                          <ProgressBar percent={comp.percent} label={comp.completed ? t.certified : `${comp.percent}%`} />
                         ) : (
-                          <span className="admin-course-muted">No asignado</span>
+                          <span className="admin-course-muted">{t.notAssigned}</span>
                         )}
                       </div>
                       <button
@@ -77,7 +77,7 @@ export default function AdminView() {
                         }
                         aria-pressed={isAssigned}
                       >
-                        {isAssigned ? (<><IconCheck size={14} /> Asignado</>) : (<><IconPlus size={14} /> Asignar</>)}
+                        {isAssigned ? (<><IconCheck size={14} /> {t.assignedLabel}</>) : (<><IconPlus size={14} /> {t.assign}</>)}
                       </button>
                     </div>
                   )

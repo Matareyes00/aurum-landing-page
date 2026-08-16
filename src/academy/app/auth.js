@@ -32,9 +32,11 @@ function currentUser() {
   return sessionUserId ? getUser(sessionUserId) : null
 }
 
+/** Devuelve un código de error, no texto: la traducción vive en `copy/portal.js`. */
 export function login(username, password) {
+  if (!username?.trim() || !password) return { ok: false, error: 'missing_fields' }
   const user = findByCredentials(username, password)
-  if (!user) return { ok: false, error: 'Usuario o contraseña incorrectos.' }
+  if (!user) return { ok: false, error: 'invalid_credentials' }
   sessionUserId = user.id
   try {
     window.localStorage.setItem(SESSION_KEY, user.id)

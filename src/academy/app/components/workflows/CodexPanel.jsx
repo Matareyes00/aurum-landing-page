@@ -1,13 +1,21 @@
 import { useMemo, useState } from 'react'
 import { IconSearch } from '../../icons'
+import { useCopy, CODEX_PANEL, CODEX_TEXT } from '../../copy'
 
 export default function CodexPanel({ tags, selectedId, onSelect, counts = {} }) {
+  const t = useCopy(CODEX_PANEL)
+  const codexText = useCopy(CODEX_TEXT)
   const [query, setQuery] = useState('')
+
+  /** Texto del tag en el idioma activo; si falta, el que quedó guardado. */
+  const textFor = (tag) => codexText[tag.id] ?? [tag.definition, tag.useWhen, tag.doNotUseWhen]
+
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase()
     if (!needle) return tags
-    return tags.filter((tag) => [tag.label, tag.category, tag.definition].some((value) => value.toLowerCase().includes(needle)))
-  }, [query, tags])
+    return tags.filter((tag) => [tag.label, tag.category, ...textFor(tag)].some((value) => value?.toLowerCase().includes(needle)))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, tags, codexText])
 
   const groups = useMemo(() => filtered.reduce((result, tag) => {
     result[tag.category] ||= []
@@ -21,7 +29,7 @@ export default function CodexPanel({ tags, selectedId, onSelect, counts = {} }) 
     <div className="codex-panel">
       <label className="codex-search">
         <IconSearch size={15} />
-        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar tag o categoría" />
+        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t.search} />
       </label>
       <div className="codex-groups">
         {Object.entries(groups).map(([category, entries]) => (
@@ -40,16 +48,16 @@ export default function CodexPanel({ tags, selectedId, onSelect, counts = {} }) 
             ))}
           </section>
         ))}
-        {!filtered.length ? <p className="wf-muted">Sin resultados.</p> : null}
+        {!filtered.length ? <p className="wf-muted">{t.empty}</p> : null}
       </div>
       {selected ? (
         <div className="codex-detail">
           <span>{selected.category}</span>
           <h3>{selected.label}</h3>
           <dl>
-            <div><dt>Definición</dt><dd>{selected.definition}</dd></div>
-            <div><dt>Usar cuando</dt><dd>{selected.useWhen}</dd></div>
-            <div><dt>No usar cuando</dt><dd>{selected.doNotUseWhen}</dd></div>
+            <div><dt>{t.definition}</dt><dd>{textFor(selected)[0]}</dd></div>
+            <div><dt>{t.useWhen}</dt><dd>{textFor(selected)[1]}</dd></div>
+            <div><dt>{t.doNotUseWhen}</dt><dd>{textFor(selected)[2]}</dd></div>
           </dl>
         </div>
       ) : null}

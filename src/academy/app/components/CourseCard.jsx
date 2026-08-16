@@ -1,23 +1,25 @@
 import { navigate } from '../router'
 import { ProgressBar } from './ui'
 import { IconPlay, IconClock, IconCheck, IconArrowRight } from '../icons'
+import { useCopy, COURSE_CARD } from '../copy'
 
 export default function CourseCard({ course, percent = 0, completed = false, started = false }) {
-  const cta = completed ? 'Repasar' : started ? 'Continuar' : 'Empezar'
+  const t = useCopy(COURSE_CARD)
+  const cta = completed ? t.review : started ? t.continue : t.start
   return (
     <article className="course-card">
       <span className="panel-corners" aria-hidden="true">
         <span /><span /><span /><span />
       </span>
       <div className="course-card-visual" aria-hidden="true">
-        <span className="course-card-edition">Aurum Academy · Programa</span>
+        <span className="course-card-edition">{t.edition}</span>
         <span className="course-card-mark">{course.code.split(' ')[0]}</span>
         <span className="course-card-number">{course.code.split(' ')[1] || '01'}</span>
       </div>
       <header className="course-card-head">
         <span className="course-card-code">{course.code}</span>
         {completed ? (
-          <span className="course-card-badge is-done"><IconCheck size={13} /> Certificado</span>
+          <span className="course-card-badge is-done"><IconCheck size={13} /> {t.certified}</span>
         ) : (
           <span className="course-card-badge">{course.level}</span>
         )}
@@ -29,7 +31,7 @@ export default function CourseCard({ course, percent = 0, completed = false, sta
 
       <div className="course-card-meta">
         <span><IconClock size={14} /> {course.duration}</span>
-        <span><IconPlay size={13} /> {course.modules.length} módulos</span>
+        <span><IconPlay size={13} /> {course.modules.length} {t.modules}</span>
       </div>
 
       <ProgressBar percent={percent} label={`${percent}% · ${cta.toLowerCase()}`} />

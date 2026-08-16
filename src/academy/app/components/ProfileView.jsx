@@ -3,9 +3,11 @@ import { updateUser, useDb, getAssignments, getProgress, courseById, courseCompl
 import { Avatar, Field, Eyebrow, ProgressBar } from './ui'
 import { IconCheck, IconStar } from '../icons'
 import Certificate from './Certificate'
+import { useCopy, PROFILE } from '../copy'
 
 export default function ProfileView({ user }) {
   useDb()
+  const t = useCopy(PROFILE)
   const [form, setForm] = useState({
     name: user.name,
     craft: user.craft || '',
@@ -40,14 +42,14 @@ export default function ProfileView({ user }) {
     <div className="view view--profile">
       <header className="view-hero profile-hero">
         <div>
-          <Eyebrow>Tu ficha de sala</Eyebrow>
-          <h1 className="view-title">Perfil</h1>
-          <p className="view-lede">Tu identidad profesional, tu recorrido y las credenciales que ya firmaste.</p>
+          <Eyebrow>{t.eyebrow}</Eyebrow>
+          <h1 className="view-title">{t.title}</h1>
+          <p className="view-lede">{t.lede}</p>
         </div>
         {!isAdmin ? (
-          <div className="profile-hero-stats" aria-label="Resumen del perfil">
-            <span><strong>{assigned.length}</strong> cursos</span>
-            <span><strong>{certificates.length}</strong> certificados</span>
+          <div className="profile-hero-stats" aria-label={t.statsAria}>
+            <span><strong>{assigned.length}</strong> {t.courses}</span>
+            <span><strong>{certificates.length}</strong> {t.certificates}</span>
           </div>
         ) : null}
       </header>
@@ -58,28 +60,28 @@ export default function ProfileView({ user }) {
           <div className="profile-id">
             <Avatar name={form.name} size={72} gold={isAdmin} />
             <div>
-              <h2>{form.name || 'Sin nombre'}</h2>
-              <p>{isAdmin ? 'Equipo · Gestión' : form.craft || 'Oficio sin definir'}</p>
+              <h2>{form.name || t.noName}</h2>
+              <p>{isAdmin ? t.adminRole : form.craft || t.noCraft}</p>
               <span className="profile-user">@{user.username}</span>
             </div>
           </div>
 
           <form className="profile-form" onSubmit={save}>
-            <Field label="Nombre">
+            <Field label={t.fieldName}>
               <input type="text" value={form.name} onChange={set('name')} required />
             </Field>
-            <Field label="Oficio">
-              <input type="text" value={form.craft} onChange={set('craft')} placeholder="Fotografía, montaje, color…" />
+            <Field label={t.fieldCraft}>
+              <input type="text" value={form.craft} onChange={set('craft')} placeholder={t.craftPlaceholder} />
             </Field>
-            <Field label="Email">
+            <Field label={t.fieldEmail}>
               <input type="email" value={form.email} onChange={set('email')} />
             </Field>
-            <Field label="Bio" hint="Una línea sobre tu mirada.">
-              <textarea rows={3} value={form.bio} onChange={set('bio')} placeholder="Contá quién sos como cineasta." />
+            <Field label={t.fieldBio} hint={t.bioHint}>
+              <textarea rows={3} value={form.bio} onChange={set('bio')} placeholder={t.bioPlaceholder} />
             </Field>
             <div className="profile-actions">
-              <button className="btn btn--gold" type="submit">Guardar cambios</button>
-              {saved ? <span className="profile-saved"><IconCheck size={14} /> Guardado</span> : null}
+              <button className="btn btn--gold" type="submit">{t.save}</button>
+              {saved ? <span className="profile-saved"><IconCheck size={14} /> {t.saved}</span> : null}
             </div>
           </form>
         </section>
@@ -87,11 +89,11 @@ export default function ProfileView({ user }) {
         <aside className="profile-side">
           <div className="profile-panel">
             <span className="panel-corners" aria-hidden="true"><span /><span /><span /><span /></span>
-            <Eyebrow>Certificados</Eyebrow>
+            <Eyebrow>{t.certificatesTitle}</Eyebrow>
             {isAdmin ? (
-              <p className="empty-note">La gestión no cursa: administrás la sala.</p>
+              <p className="empty-note">{t.adminNoCourses}</p>
             ) : certificates.length === 0 ? (
-              <p className="empty-note">Todavía no tenés certificados. Completá un curso para firmar el primero.</p>
+              <p className="empty-note">{t.noCertificates}</p>
             ) : (
               <ul className="cert-list">
                 {certificates.map((c) => (
@@ -99,10 +101,10 @@ export default function ProfileView({ user }) {
                     <IconStar size={16} />
                     <div>
                       <strong>{c.course.title}</strong>
-                      <span>Evaluador certificado · {c.course.code}</span>
+                      <span>{t.certifiedEvaluator} · {c.course.code}</span>
                     </div>
                     <button className="link-btn" type="button" onClick={() => setSelectedCertificate(c)}>
-                      Ver
+                      {t.view}
                     </button>
                   </li>
                 ))}
@@ -113,9 +115,9 @@ export default function ProfileView({ user }) {
           {!isAdmin ? (
             <div className="profile-panel">
               <span className="panel-corners" aria-hidden="true"><span /><span /><span /><span /></span>
-              <Eyebrow>Avance</Eyebrow>
+              <Eyebrow>{t.progressTitle}</Eyebrow>
               {assigned.length === 0 ? (
-                <p className="empty-note">Sin cursos asignados aún.</p>
+                <p className="empty-note">{t.noAssigned}</p>
               ) : (
                 <ul className="progress-list">
                   {assigned.map((c) => {

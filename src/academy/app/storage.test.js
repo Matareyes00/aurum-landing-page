@@ -53,6 +53,26 @@ describe('Academy storage v2', () => {
     expect(migrateV1({}).version).toBe(2)
   })
 
+  it('gives every seed task its own brief and comparable outputs', () => {
+    const db = createSeedDb()
+    // Cada workflow trae su propia consigna: un prompt genérico compartido no
+    // permite evaluar adherencia ni continuidad.
+    expect(new Set(db.tasks.map((task) => task.objective)).size).toBe(10)
+
+    const preference = db.tasks.find((task) => task.workflowId === 'preference_evaluation')
+    expect(preference.outputs).toHaveLength(2)
+    expect(preference.outputs[0].src).not.toBe(preference.outputs[1].src)
+
+    const continuity = db.tasks.find((task) => task.workflowId === 'continuity_coherence')
+    expect(continuity.outputs).toHaveLength(3)
+    expect(new Set(continuity.outputs.map((output) => output.src)).size).toBe(2)
+
+    // El host viejo de MDN está descontinuado y ya no garantiza CORS.
+    for (const output of db.tasks.flatMap((task) => task.outputs)) {
+      expect(output.src).not.toContain('interactive-examples.mdn.mozilla.net')
+    }
+  })
+
   it('synchronizes a valid v2 snapshot received from another tab', () => {
     transact(createSeedDb())
     const remoteDb = createSeedDb()

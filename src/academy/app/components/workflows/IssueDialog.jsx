@@ -2,7 +2,9 @@ import { useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { createId } from '../../tasks'
 import { IconTarget, IconTrash } from '../../icons'
+import { useFocusTrap } from '../../useFocusTrap'
 import CodexPanel from './CodexPanel'
+import { useCopy, ISSUE_DIALOG, ENUM_LABELS, WORKBENCH } from '../../copy'
 
 const SEVERITIES = ['low', 'medium', 'high', 'critical']
 const CONFIDENCES = ['low', 'medium', 'high']
@@ -22,6 +24,7 @@ export function annotationPixels(annotation) {
 }
 
 function BBoxEditor({ frameDataUrl, sourceWidth, sourceHeight, frameNumber, frameSec, value, onChange }) {
+  const bboxCopy = useCopy(WORKBENCH)
   const stageRef = useRef(null)
   const dragRef = useRef(null)
 
@@ -78,9 +81,9 @@ function BBoxEditor({ frameDataUrl, sourceWidth, sourceHeight, frameNumber, fram
         {value ? <span className="bbox-selection" style={{ left: `${value.x * 100}%`, top: `${value.y * 100}%`, width: `${value.width * 100}%`, height: `${value.height * 100}%` }} /> : null}
       </div>
       <div className="bbox-readout">
-        <span>{pixels ? `x ${pixels.x}px · y ${pixels.y}px · w ${pixels.width}px · h ${pixels.height}px` : 'Arrastrá para marcar el artefacto'}</span>
+        <span>{pixels ? `x ${pixels.x}px · y ${pixels.y}px · w ${pixels.width}px · h ${pixels.height}px` : bboxCopy.dragToMark}</span>
         <span>{value ? `${(value.x * 100).toFixed(1)}% / ${(value.y * 100).toFixed(1)}% · ${(value.width * 100).toFixed(1)}% × ${(value.height * 100).toFixed(1)}%` : null}</span>
-        {value ? <button type="button" onClick={() => onChange(null)} aria-label="Borrar selección"><IconTrash size={14} /></button> : null}
+        {value ? <button type="button" onClick={() => onChange(null)} aria-label={bboxCopy.clearSelection}><IconTrash size={14} /></button> : null}
       </div>
     </div>
   )
@@ -88,8 +91,12 @@ function BBoxEditor({ frameDataUrl, sourceWidth, sourceHeight, frameNumber, fram
 
 export default function IssueDialog({ context, tags, onClose, onCreate }) {
   const [selectedTag, setSelectedTag] = useState(null)
-  const [severity, setSeverity] = useState('medium')
-  const [confidence, setConfidence] = useState('high')
+  const dialogRef = useFocusTrap(true, onClose)
+  // Sin responder: el tag puede sugerir una severidad, pero nunca se precarga.
+  const [severity, setSeverity] = useState(null)
+  const [confidence, setConfidence] = useState(null)
+  const t = useCopy(ISSUE_DIALOG)
+  const enumLabel = useCopy(ENUM_LABELS)
   const [startSec, setStartSec] = useState(context.inSec ?? context.currentSec ?? 0)
   const [endSec, setEndSec] = useState(context.outSec ?? context.inSec ?? context.currentSec ?? 0)
   const [affectedArea, setAffectedArea] = useState('')
@@ -101,11 +108,14 @@ export default function IssueDialog({ context, tags, onClose, onCreate }) {
   const filteredTags = useMemo(() => tags, [tags])
   const chooseTag = (tag) => {
     setSelectedTag(tag)
-    if (tag.defaultSeverity) setSeverity(tag.defaultSeverity)
+    // La severidad sugerida del Codex sólo se aplica si todavía no se eligió una.
+    if (tag.defaultSeverity && severity === null) setSeverity(tag.defaultSeverity)
   }
 
+  const ready = Boolean(selectedTag) && severity !== null && confidence !== null
+
   const confirm = () => {
-    if (!selectedTag) return
+    if (!ready) return
     onCreate({
       id: createId('issue'),
       outputId: context.output.id,
@@ -126,28 +136,28 @@ export default function IssueDialog({ context, tags, onClose, onCreate }) {
 
   return createPortal(
     <div className="wf-modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <section className="wf-modal issue-modal" role="dialog" aria-modal="true" aria-label={`Agregar issue en ${context.output.label}`}>
+      <section className="wf-modal issue-modal" ref={dialogRef} tabIndex="-1" role="dialog" aria-modal="true" aria-label={`${t.confirm} · ${context.output.label}`}>
         <header className="wf-modal-head">
-          <div><span>Evidence capture</span><h2>Issue · {context.output.label}</h2></div>
-          <button type="button" onClick={onClose} aria-label="Cerrar">×</button>
+          <div><span>{t.eyebrow}</span><h2>{t.title} · {context.output.label}</h2></div>
+          <button type="button" onClick={onClose} aria-label={t.close}>×</button>
         </header>
         <div className="issue-modal-grid">
           <div className="issue-codex"><CodexPanel tags={filteredTags} selectedId={selectedTag?.id} onSelect={chooseTag} /></div>
           <div className="issue-fields">
             <div className="wf-field-row">
-              <label className="wf-field"><span>Inicio</span><input type="number" step="0.001" value={startSec} onChange={(event) => setStartSec(event.target.value)} /><small>Frame {frameNumber}</small></label>
-              <label className="wf-field"><span>Fin</span><input type="number" step="0.001" value={endSec} onChange={(event) => setEndSec(event.target.value)} /></label>
+              <label className="wf-field"><span>{t.start}</span><input type="number" step="0.001" value={startSec} onChange={(event) => setStartSec(event.target.value)} /><small>{t.frame} {frameNumber}</small></label>
+              <label className="wf-field"><span>{t.end}</span><input type="number" step="0.001" value={endSec} onChange={(event) => setEndSec(event.target.value)} /></label>
             </div>
-            <div className="wf-field"><span>Severidad</span><div className="segmented">{SEVERITIES.map((value) => <button type="button" className={severity === value ? 'is-active' : ''} key={value} onClick={() => setSeverity(value)}>{value}</button>)}</div></div>
-            <div className="wf-field"><span>Confianza</span><div className="segmented">{CONFIDENCES.map((value) => <button type="button" className={confidence === value ? 'is-active' : ''} key={value} onClick={() => setConfidence(value)}>{value}</button>)}</div></div>
-            <label className="wf-field"><span>Área afectada</span><input value={affectedArea} onChange={(event) => setAffectedArea(event.target.value)} placeholder="Mano derecha, fondo, reflejo…" /></label>
-            <label className="wf-field"><span>Evidencia observable</span><textarea rows="3" value={evidence} onChange={(event) => setEvidence(event.target.value)} placeholder="Qué ves, dónde ocurre y por qué corresponde al tag." /></label>
+            <div className="wf-field"><span>{t.severity}{severity === null ? <em className="score-pending"> {t.unanswered}</em> : null}</span><div className="segmented">{SEVERITIES.map((value) => <button type="button" className={severity === value ? 'is-active' : ''} key={value} onClick={() => setSeverity(value)}>{enumLabel[value] || value}</button>)}</div></div>
+            <div className="wf-field"><span>{t.confidence}{confidence === null ? <em className="score-pending"> {t.unanswered}</em> : null}</span><div className="segmented">{CONFIDENCES.map((value) => <button type="button" className={confidence === value ? 'is-active' : ''} key={value} onClick={() => setConfidence(value)}>{enumLabel[value] || value}</button>)}</div></div>
+            <label className="wf-field"><span>{t.affectedArea}</span><input value={affectedArea} onChange={(event) => setAffectedArea(event.target.value)} placeholder={t.areaPlaceholder} /></label>
+            <label className="wf-field"><span>{t.evidence}</span><textarea rows="3" value={evidence} onChange={(event) => setEvidence(event.target.value)} placeholder={t.evidencePlaceholder} /></label>
             {context.frameDataUrl ? (
-              <div className="wf-field"><span><IconTarget size={14} /> Selección espacial</span><BBoxEditor frameDataUrl={context.frameDataUrl} sourceWidth={context.width} sourceHeight={context.height} frameNumber={frameNumber} frameSec={Number(startSec)} value={annotation} onChange={setAnnotation} /></div>
-            ) : <p className="wf-warning">El video no permitió capturar este frame. El issue temporal se puede guardar sin bbox.</p>}
+              <div className="wf-field"><span><IconTarget size={14} /> {t.spatial}</span><BBoxEditor frameDataUrl={context.frameDataUrl} sourceWidth={context.width} sourceHeight={context.height} frameNumber={frameNumber} frameSec={Number(startSec)} value={annotation} onChange={setAnnotation} /></div>
+            ) : <p className="wf-warning">{t.noCapture}</p>}
             <div className="wf-modal-actions">
-              <button className="wf-btn wf-btn--ghost" type="button" onClick={onClose}>Cancelar</button>
-              <button className="wf-btn wf-btn--gold" type="button" disabled={!selectedTag} onClick={confirm}>Agregar issue</button>
+              <button className="wf-btn wf-btn--ghost" type="button" onClick={onClose}>{t.cancel}</button>
+              <button className="wf-btn wf-btn--gold" type="button" disabled={!ready} onClick={confirm}>{t.confirm}</button>
             </div>
           </div>
         </div>

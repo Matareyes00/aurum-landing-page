@@ -1,5 +1,7 @@
 /* Reusable portal UI primitives — all Aurum-styled, no external deps. */
 
+import { useLang, setLang } from '../copy'
+
 export function initials(name = '') {
   const parts = name.trim().split(/\s+/).filter(Boolean)
   if (parts.length === 0) return '·'
@@ -65,4 +67,30 @@ export function Field({ label, hint, children }) {
 
 export function Eyebrow({ children }) {
   return <span className="p-eyebrow">{children}</span>
+}
+
+/** Selector ES/EN — comparte el store de idioma con la landing pública. */
+export function LangSwitch({ className = '' }) {
+  const lang = useLang()
+  return (
+    <div className={`lang-switch ${className}`} role="group" aria-label="Language / Idioma">
+      <button
+        type="button"
+        className={lang === 'es' ? 'is-active' : ''}
+        onClick={() => setLang('es')}
+        aria-pressed={lang === 'es'}
+      >
+        ES
+      </button>
+      <span aria-hidden="true">/</span>
+      <button
+        type="button"
+        className={lang === 'en' ? 'is-active' : ''}
+        onClick={() => setLang('en')}
+        aria-pressed={lang === 'en'}
+      >
+        EN
+      </button>
+    </div>
+  )
 }

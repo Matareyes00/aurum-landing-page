@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { IconCheck, IconPrint } from '../icons'
+import { useCopy, CERTIFICATE } from '../copy'
 
 function credentialId(userId, courseId, completedAt) {
   const source = `${userId}:${courseId}:${completedAt || 'pending'}`
@@ -21,6 +22,7 @@ function formatDate(timestamp) {
 }
 
 export default function Certificate({ user, course, completedAt, onClose }) {
+  const t = useCopy(CERTIFICATE)
   const credential = credentialId(user.id, course.id, completedAt)
   const dialogRef = useRef(null)
 
@@ -62,7 +64,7 @@ export default function Certificate({ user, course, completedAt, onClose }) {
       className="certificate-overlay"
       role="dialog"
       aria-modal="true"
-      aria-label="Certificado de finalización"
+      aria-label={t.aria}
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose()
       }}
@@ -101,14 +103,14 @@ export default function Certificate({ user, course, completedAt, onClose }) {
               </div>
             </div>
             <div className="certificate-slate" aria-label="Metadatos de la credencial">
-              <span>EDICIÓN CERTIFICADA</span>
+              <span>{t.edition}</span>
               <strong>CREDENCIAL INTERNA / 01</strong>
             </div>
           </header>
 
           <main className="certificate-body">
             <div className="certificate-copy">
-              <span className="certificate-kicker"><i /> CERTIFICADO DE FINALIZACIÓN</span>
+              <span className="certificate-kicker"><i /> {t.kicker}</span>
               <p className="certificate-intro">Aurum Academy reconoce a</p>
               <h1>{user.name}</h1>
               <div className="certificate-program">
@@ -116,7 +118,7 @@ export default function Certificate({ user, course, completedAt, onClose }) {
                 <h2>{course.title}</h2>
               </div>
               <p className="certificate-statement">
-                Por demostrar mirada, criterio y consistencia en la evaluación de imagen generativa bajo estándares cinematográficos.
+                {t.rationale}
               </p>
             </div>
 
@@ -128,10 +130,10 @@ export default function Certificate({ user, course, completedAt, onClose }) {
               </div>
               <div>
                 <span>DISCIPLINA</span>
-                <strong>EVALUACIÓN AUDIOVISUAL IA</strong>
+                <strong>{t.discipline}</strong>
               </div>
               <div>
-                <span>ESTÁNDAR</span>
+                <span>{t.standard}</span>
                 <strong>AURUM QUALITY / AQS-01</strong>
               </div>
             </aside>
@@ -143,12 +145,12 @@ export default function Certificate({ user, course, completedAt, onClose }) {
               <strong>{formatDate(completedAt)}</strong>
             </div>
             <div className="certificate-signature">
-              <span>VALIDACIÓN INSTITUCIONAL</span>
+                <span>{t.validation}</span>
               <div className="certificate-authority">
                 <img src="/symbol-small.png" alt="" />
                 <div>
                   <strong>Aurum Academy</strong>
-                  <small>Dirección académica · Emisor</small>
+                  <small>{t.issuer}</small>
                 </div>
               </div>
             </div>

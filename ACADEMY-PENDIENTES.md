@@ -30,10 +30,14 @@ implementada en `src/academy/app/`.
 - LUEGO: API y base de datos con users, courses, workflow assignments, tasks,
   evaluations, issues, reviews y Codex. Object storage para medios y uploads firmados.
 
-### 3. Portal bilingüe (ES/EN)
-- HOY: el portal está en español. La landing pública ya es bilingüe.
-- LUEGO: aplicar el mismo patrón `useLang`/`useCopy` de `src/i18n/` al portal
-  (login, shell, vistas y contenidos de curso).
+### 3. Portal bilingüe (ES/EN) — [HECHO]
+- HOY: el portal usa el mismo patrón `useLang`/`useCopy` de `src/i18n/`, con los
+  diccionarios en `src/academy/app/copy/` (`portal.js` y `workflows.js`). Cubre
+  login, shell, vistas, gestión, certificado y la mesa de evaluación completa.
+  `validateEvaluation` y `login` devuelven códigos, no texto: la traducción vive
+  en la interfaz y los tests no dependen del idioma.
+- FALTA: el contenido editorial de los cursos (`COURSES` en `data.js`) sigue sólo
+  en español. Ver Fase 5 en `ACADEMY-FASES.md`.
 
 ### 4. Autoría de cursos
 - HOY: los cursos están escritos a mano en `src/academy/app/data.js` (2 cursos:

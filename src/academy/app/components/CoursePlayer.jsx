@@ -17,6 +17,7 @@ import {
   IconStar,
 } from '../icons'
 import Certificate from './Certificate'
+import { useCopy, PLAYER } from '../copy'
 
 function Section({ section }) {
   switch (section.type) {
@@ -59,10 +60,11 @@ function Section({ section }) {
 }
 
 function Quiz({ module, savedAnswer, selected, feedback, onSelect, onConfirm }) {
+  const t = useCopy(PLAYER)
   const answered = !!savedAnswer
   return (
     <div className="reader-quiz">
-      <span className="reader-quiz-eyebrow">Comprobación</span>
+      <span className="reader-quiz-eyebrow">{t.quizEyebrow}</span>
       <h3 className="reader-quiz-q">{module.quiz.question}</h3>
       <div className="reader-quiz-options">
         {module.quiz.options.map((opt) => {
@@ -91,12 +93,12 @@ function Quiz({ module, savedAnswer, selected, feedback, onSelect, onConfirm }) 
           <IconCheck size={15} /> {module.quiz.explanation}
         </p>
       ) : feedback === 'wrong' ? (
-        <p className="quiz-explain is-wrong">Esa no es. Volvé a mirar y probá de nuevo.</p>
+        <p className="quiz-explain is-wrong">{t.wrong}</p>
       ) : null}
 
       {!answered ? (
         <button className="btn btn--gold quiz-confirm" type="button" disabled={!selected} onClick={onConfirm}>
-          Confirmar
+          {t.confirm}
         </button>
       ) : null}
     </div>
@@ -104,6 +106,7 @@ function Quiz({ module, savedAnswer, selected, feedback, onSelect, onConfirm }) 
 }
 
 export default function CoursePlayer({ user, courseId }) {
+  const t = useCopy(PLAYER)
   useDb()
   const course = courseById(courseId)
   const [selected, setSelected] = useState(null)
@@ -173,9 +176,9 @@ export default function CoursePlayer({ user, courseId }) {
     return (
       <div className="view view--player-empty">
         <span className="lock-badge"><IconLock size={22} /></span>
-        <h1 className="view-title">Este curso no está en tu programa</h1>
-        <p className="view-lede">Pedile al equipo de Aurum que te lo asigne.</p>
-        <button className="btn btn--ghost" type="button" onClick={() => navigate('/cursos')}>Volver a cursos</button>
+        <h1 className="view-title">{t.notInProgram}</h1>
+        <p className="view-lede">{t.askAssign}</p>
+        <button className="btn btn--ghost" type="button" onClick={() => navigate('/cursos')}>{t.backToCourses}</button>
       </div>
     )
   }
@@ -287,7 +290,7 @@ export default function CoursePlayer({ user, courseId }) {
 
       <section className="course-reader">
         <header className="reader-toolbar">
-          <span className="reader-toolbar-pos">Módulo {currentIndex + 1} de {modules.length}</span>
+          <span className="reader-toolbar-pos">{t.moduleOf.replace('{n}', currentIndex + 1).replace('{total}', modules.length)}</span>
           <button className="link-btn" type="button" onClick={doReset}>Reiniciar</button>
         </header>
 
@@ -295,7 +298,7 @@ export default function CoursePlayer({ user, courseId }) {
           <article className="reader-article">
             <div className="reader-modlabel">
               <span>{module.tag}</span>
-              <small>Módulo {String(currentIndex + 1).padStart(2, '0')}</small>
+              <small>{t.module} {String(currentIndex + 1).padStart(2, '0')}</small>
             </div>
             <h1 className="reader-title">{module.title}</h1>
             <p className="reader-summary">{module.summary}</p>
@@ -319,13 +322,13 @@ export default function CoursePlayer({ user, courseId }) {
 
         <footer className="reader-footer">
           <button className="btn btn--ghost" type="button" disabled={currentIndex === 0} onClick={() => goTo(currentIndex - 1)}>
-            <IconArrowLeft size={15} /> Anterior
+            <IconArrowLeft size={15} /> {t.previous}
           </button>
           <span className="reader-gate">
-            {canContinue ? 'Progreso guardado' : 'Respondé la comprobación para seguir'}
+            {canContinue ? t.progressSaved : t.answerToContinue}
           </span>
           <button className="btn btn--gold" type="button" disabled={!canContinue} onClick={goNext}>
-            {currentIndex === lastIndex ? 'Finalizar' : 'Siguiente'} <IconArrowRight size={15} />
+            {currentIndex === lastIndex ? t.finish : t.next} <IconArrowRight size={15} />
           </button>
         </footer>
       </section>
@@ -344,11 +347,10 @@ export default function CoursePlayer({ user, courseId }) {
           <div className="finish-modal" onMouseDown={(event) => event.stopPropagation()}>
             <span className="panel-corners" aria-hidden="true"><span /><span /><span /><span /></span>
             <span className="finish-badge"><IconStar size={26} /></span>
-            <span className="finish-eyebrow">Certificado · {course.code}</span>
-            <h2>Terminaste el curso.</h2>
+          <span className="finish-eyebrow">{t.certificate} · {course.code}</span>
+          <h2>{t.courseDone}</h2>
             <p>
-              Firmaste <strong>{course.title}</strong>. Sumaste criterio a tu ojo y un
-              paso más hacia la red de evaluadores de Aurum.
+            {t.signedLead} <strong>{course.title}</strong>. {t.signedTail}
             </p>
             <div className="finish-actions">
               <button className="btn btn--gold" type="button" onClick={openCertificate}>

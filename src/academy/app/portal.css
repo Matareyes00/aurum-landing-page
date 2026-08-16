@@ -474,6 +474,13 @@
   box-shadow: inset 0 -1px 0 rgba(246, 226, 160, 0.28);
 }
 
+.pnav-side { display: flex; align-items: center; gap: 0.5rem; }
+.lang-switch { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.15rem 0.35rem; border: 1px solid rgba(212, 169, 78, 0.22); border-radius: 999px; color: #7d7568; font-family: var(--mono, ui-monospace, monospace); font-size: 0.6rem; letter-spacing: 0.1em; }
+.lang-switch button { min-width: 26px; min-height: 26px; border: 0; background: none; color: inherit; cursor: pointer; font: inherit; letter-spacing: inherit; border-radius: 999px; }
+.lang-switch button.is-active { color: #0d0b09; background: var(--gold, #d4a94e); }
+.lang-switch button:not(.is-active):hover { color: #e8dfd0; }
+.lang-switch button:focus-visible { outline: 2px solid var(--gold, #d4a94e); outline-offset: 2px; }
+
 .pnav-user { position: relative; margin-left: 0.6rem; }
 .pnav-user-btn {
   display: inline-flex;
@@ -1732,6 +1739,42 @@
   .certificate-seal { width: 60px; height: 60px; }
   .certificate-footer { grid-template-columns: 1fr 1fr; }
   .certificate-signature { display: none !important; }
+  /* Targets tactiles y lectura del curso en mobile. */
+  .pnav-link { min-width: 44px; justify-content: center; }
+  .course-map { max-height: 34vh; padding: 1rem; }
+  .course-map-progress { margin: 1rem 0; }
+  .modnav-item { min-height: 48px; }
+  .quiz-option { min-height: 48px; }
+  .reader-toolbar { gap: 0.6rem; padding-inline: 1rem; }
+  .reader-body { padding: 1.4rem 1rem 2.2rem; }
+  .reader-footer { flex-wrap: wrap; padding-inline: 1rem; }
+  .reader-footer .btn { flex: 1 1 auto; min-height: 46px; justify-content: center; padding: 0.8rem 1rem; }
+  .reader-gate { flex: 1 1 100%; order: -1; }
+}
+
+/* Telefonos chicos (390px de ancho de referencia). */
+@media (max-width: 430px) {
+  .pnav { padding-inline: 0.5rem; }
+  .view { padding: 2.4rem 0.9rem 4rem; }
+  .view-hero { margin-bottom: 1.9rem; padding: 0 0 1.5rem 0.85rem; }
+  .view-title { font-size: clamp(2.2rem, 12vw, 2.9rem); }
+  .view-lede { font-size: 0.95rem; }
+  .section-head { align-items: flex-start; flex-direction: column; gap: 0.4rem; }
+  .courses-summary { padding-left: 0.85rem; }
+  .home-resume { padding: 1.5rem 1.2rem; }
+  .home-resume-info h2 { font-size: 1.35rem; }
+  .course-card-head { margin-inline: 1.1rem; }
+  .course-card-title, .course-card-sub, .course-card-summary, .course-card-meta { margin-inline: 1.1rem; }
+  .course-card > .pbar, .course-card-cta { margin-inline: 1.1rem; }
+  .course-map { max-height: 30vh; padding: 0.85rem; }
+  .reader-title { font-size: clamp(1.6rem, 8vw, 2rem); }
+  .reader-paragraph { font-size: 0.96rem; }
+  .reader-body { padding: 1.2rem 0.9rem 2rem; }
+  .reader-quiz { padding: 1.1rem 0.9rem; }
+  .finish-overlay { padding: 1rem; }
+  .finish-modal { padding: 1.9rem 1.3rem; }
+  .certificate { min-height: 700px; padding: 3rem 1.4rem 2.6rem; }
+  .certificate-frame { inset: 18px 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
