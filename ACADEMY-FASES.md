@@ -12,16 +12,17 @@ por fases. Este archivo se actualiza a medida que avanza cada fase.
 El Console de evaluación vivía en el repo `aurum-brain` (Next.js). La decisión
 fue migrarlo al portal Academy de esta landing (SPA Vite + React, sin
 TypeScript, persistencia en `localStorage`). La capa de workflows ya está
-migrada; lo que queda es cerrar huecos de calidad, idioma y mobile.
+migrada y verificada; lo que queda pertenece al contenido editorial o al roadmap
+de producción, no a la interacción base de los workflows.
 
-### Decisión pendiente sobre `aurum-brain`
+### Decisión tomada sobre `aurum-brain`
 
-Se hicieron cambios P0/P1/P2 en `aurum-brain` que quedaron **sin verificar**
-(no se pudo instalar dependencias). Al haberse migrado el Console al Academy,
-ese trabajo es en buena parte redundante.
+Los cambios P0/P1/P2 de `aurum-brain` se verificaron y quedaron guardados en el
+commit `e7a20af`. Al haberse migrado el Console al Academy, ese repo queda como
+referencia técnica; el desarrollo de producto de workflows continúa acá.
 
-- [ ] Decidir: congelar `aurum-brain` (recomendado), verificar y commitear, o revertir
-- [ ] Si se congela: usarlo sólo como referencia de diseño para la Fase 4
+- [x] Verificar y commitear el cierre técnico de `aurum-brain`
+- [x] Congelar allí el desarrollo de workflows y usarlo sólo como referencia
 
 ---
 
@@ -111,7 +112,7 @@ sin dependencias nuevas. Cierra el punto 3 de `ACADEMY-PENDIENTES.md`.
 
 ---
 
-## Fase 3 — Responsive mobile ✅ COMPLETA (falta verificación visual)
+## Fase 3 — Responsive mobile ✅ COMPLETA
 
 Objetivo: los diez workflows y todo el portal usables a 390 px.
 
@@ -143,12 +144,12 @@ Objetivo: los diez workflows y todo el portal usables a 390 px.
 - [x] `.modnav-item` y `.quiz-option` a 48 px
 
 ### Pendiente de la Fase 3
-- [ ] Recorrido visual real a 390 px de los diez workflows (requiere `npm run dev`)
-- [ ] Confirmar que el drawer del Codex no tape la barra de acciones en teléfonos chicos
+- [x] Recorrido real automatizado a 390 px de los diez workflows, sin overflow horizontal
+- [x] El bottom sheet del Codex deja visible la barra de acciones y cierra desde el backdrop
 
 ---
 
-## Fase 4 — Portar mejoras de UX del Console ✅ COMPLETA (falta verificación)
+## Fase 4 — Portar mejoras de UX del Console ✅ COMPLETA
 
 Diseñado y probado en `aurum-brain`; ahora vive en el Academy en JSX.
 
@@ -198,12 +199,12 @@ Diseñado y probado en `aurum-brain`; ahora vive en el Academy en JSX.
 - [x] Resumen humano traducible en los diez workflows
 
 ### Pendiente de la Fase 4
-- [ ] Verificar el recorrido completo en navegador (requiere `npm run dev`)
-- [ ] Confirmar que el foco vuelve bien al cerrar el diálogo de issues con Escape
+- [x] Recorrido completo verificado en navegador sobre el build de producción
+- [x] El foco vuelve al botón que abrió el diálogo de issues al cerrarlo con Escape
 
 ---
 
-## Fase 5 — Contenido y cierre ✅ COMPLETA (falta verificación)
+## Fase 5 — Contenido y cierre ✅ COMPLETA PARA EL MVP
 
 ### Idioma del panel de gestión
 - [x] `ADMIN_HUB` en `copy/portal.js` — pestañas, personas, workflows, tareas, Codex y resultados
@@ -237,22 +238,25 @@ Diseñado y probado en `aurum-brain`; ahora vive en el Academy en JSX.
       del contenido de los cursos
 
 ### Pendiente de la Fase 5
-- [ ] `npm install` y `npm run test`
-- [ ] Revisión visual a 390 px antes de mergear
+- [x] Dependencias instaladas y `npm run test`: 22/22 tests
+- [x] Revisión automatizada a 390 px de los diez workflows
 - [ ] Reemplazar los clips CC0 por material propio de Aurum cuando exista
 - [ ] Traducir el contenido editorial de los cursos
 
 ---
 
-## Verificación bloqueada
+## Verificación ejecutada
 
-No hay `node_modules` en el repo, así que **nada de las cinco fases pudo
-ejecutarse todavía**. Al correr `npm install`:
+Última pasada: 2026-08-16.
 
-- [ ] `npm run test` — deben pasar `workflows.test.js` y `storage.test.js`
-- [ ] `npm run dev` y recorrer `/academy/app/` en ES y EN
-- [ ] Verificar que el cambio de idioma persiste entre recargas y pestañas
-- [ ] Recorrer las cinco etapas en desktop y en mobile (390 px)
+- [x] `npm test` — 22/22 tests
+- [x] `npm run build` — build de producción correcto
+- [x] `npm audit` — 0 vulnerabilidades conocidas
+- [x] `npm run verify:academy` — desktop, tablet y mobile sin overflow
+- [x] Los diez workflows montan workbench y formulario a 390 px
+- [x] Video A/B, Codex, issue con bbox, cierre por backdrop y retorno de foco
+- [x] Colas de alumno y Gestión contienen las diez tareas esperadas
+- [ ] Smoke manual del cambio de idioma entre recargas y pestañas
 - [ ] Crear una tarea N-way desde Gestión y evaluarla de punta a punta
 
 ---

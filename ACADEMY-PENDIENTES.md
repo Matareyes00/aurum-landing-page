@@ -13,7 +13,9 @@ implementada en `src/academy/app/`.
   tareas, evaluaciones y Codex. Migra automáticamente desde v1 y sincroniza pestañas.
 - Los videos y capturas no se persisten en `localStorage`; las tareas guardan solo
   metadata y URLs CORS-safe. Los frames capturados existen únicamente en memoria.
-- Vitest cubre storage, migración, validadores, exportadores y geometría de bbox.
+- Vitest cubre storage, migración, validadores, exportadores y geometría de bbox
+  (22 tests). El verificador de navegador recorre los diez workflows a 390 px,
+  además de las vistas clave en tablet y desktop.
 
 ## Pendientes prioritarios
 
@@ -66,10 +68,13 @@ implementada en `src/academy/app/`.
 - [HECHO] Polish visual del portal: superficies glass, luz reactiva al cursor,
   interacciones, login editorial, marca más legible y perfil con mayor jerarquía.
 
-## Cómo probar el MVP (cuando haya red)
-1. `npm install` y `npm run dev`.
-2. Ir a `/academy/app/`.
-3. Login `admin / admin` → Gestión → asignar un curso a "Ana Ríos" (alumno).
-4. Cerrar sesión → login `alumno / alumno` → Inicio muestra los cursos asignados.
-5. Abrir un curso → los módulos se desbloquean al responder bien la comprobación →
+## Cómo probar el MVP
+1. `npm ci`.
+2. `npm test`.
+3. `npm run verify:academy` (compila, levanta un preview temporal y recorre la UI).
+4. Para exploración manual, `npm run dev`.
+5. Ir a `/academy/app/`.
+6. Login `admin / admin` → Gestión → asignar un curso a "Ana Ríos" (alumno).
+7. Cerrar sesión → login `alumno / alumno` → Inicio muestra los cursos asignados.
+8. Abrir un curso → los módulos se desbloquean al responder bien la comprobación →
    Finalizar → certificado → verlo en Perfil.

@@ -24,7 +24,7 @@ export default function EvaluationBottomBar({ stage, states, saveState, disabled
       </div>
       <div className="ebb-actions">
         <button type="button" className="wf-btn wf-btn--ghost" disabled={index === 0} onClick={() => onStage(STAGES[index - 1])} aria-label={t.prev}><IconArrowLeft size={15} /></button>
-        <button type="button" className="wf-btn wf-btn--ghost" onClick={onCodex}>{t.openCodex}</button>
+        <button type="button" className="wf-btn wf-btn--ghost ebb-codex" onClick={onCodex}>{t.openCodex}</button>
         {!disabled ? <button type="button" className="wf-btn wf-btn--ghost" onClick={onSave} aria-label={workspace.saveDraft}><IconSave size={15} /></button> : null}
         {isLast
           ? <button type="button" className="wf-btn wf-btn--gold" disabled={disabled} onClick={onSubmit}>{workspace.submit}</button>

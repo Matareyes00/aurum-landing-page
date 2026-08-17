@@ -457,9 +457,9 @@
   .save-indicator { font-size: 0; }
   .save-indicator svg { width: 16px; height: 16px; }
   /* El Codex pasa a bottom sheet: accesible desde cualquier etapa. */
-  .workflow-codex { inset: auto 0 0 0; width: auto; height: min(74svh, 560px); border-left: 0; border-top: 1px solid var(--hairline); border-radius: 10px 10px 0 0; box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.6); }
+  .workflow-codex { inset: auto 0 64px 0; width: auto; height: min(calc(74svh - 64px), 496px); border-left: 0; border-top: 1px solid var(--hairline); border-radius: 10px 10px 0 0; box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.6); }
   .workflow-codex > header { padding-bottom: 0.6rem; }
-  .workflow-codex-backdrop { top: calc(var(--pnav-h) + 60px); }
+  .workflow-codex-backdrop { top: calc(var(--pnav-h) + 60px); bottom: 64px; }
   .stage-stepper ol { grid-template-columns: repeat(5, minmax(0, 1fr)); }
   .stage-step { min-height: 52px; }
   .stage-step-mark { width: 20px; height: 20px; }

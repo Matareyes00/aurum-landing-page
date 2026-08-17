@@ -17,6 +17,18 @@ if (!executablePath) {
   throw new Error('No se encontró Chrome/Edge. Definí CHROME_PATH con la ruta del navegador.')
 }
 const outputDir = os.tmpdir()
+const workflowIds = [
+  'preference_evaluation',
+  'single_video_qc',
+  'event_temporal_annotation',
+  'prompt_adherence',
+  'continuity_coherence',
+  'style_consistency',
+  'audio_visual_sync',
+  'physics_behavior',
+  'safety_compliance',
+  'adversarial_red_team',
+]
 const browser = await puppeteer.launch({ executablePath, headless: true, args: ['--no-sandbox'] })
 const page = await browser.newPage()
 const errors = []
@@ -53,7 +65,7 @@ async function settle() {
   await new Promise((resolve) => setTimeout(resolve, 900))
 }
 
-const report = { screenshots: [], views: [], counts: {}, errors }
+const report = { screenshots: [], views: [], counts: {}, mobileWorkflows: [], errors }
 
 await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 })
 await setUser('u_ana')
@@ -102,6 +114,12 @@ await page.click('.wf-modal-actions .wf-btn--gold')
 await page.waitForSelector('.issue-modal', { hidden: true })
 report.counts.savedIssues = await page.$$eval('.issue-row', (items) => items.length)
 
+await page.click('.video-pane.is-output-active .video-add-issue')
+await page.waitForSelector('.issue-modal')
+await page.keyboard.press('Escape')
+await page.waitForSelector('.issue-modal', { hidden: true })
+report.issueDialogFocusReturned = await page.evaluate(() => document.activeElement?.classList.contains('video-add-issue'))
+
 await setUser('u_admin')
 await page.goto(`${baseUrl}#/admin/tasks`, { waitUntil: 'networkidle0' })
 await page.waitForSelector('.admin-task-list')
@@ -124,9 +142,33 @@ report.views.push(await metrics('student-workspace-tablet'))
 
 await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 })
 await setUser('u_ana')
+for (const workflowId of workflowIds) {
+  await page.goto(`${baseUrl}#/workflow/task-${workflowId}`, { waitUntil: 'networkidle0' })
+  await page.waitForSelector('.workflow-workspace')
+  await settle()
+  report.mobileWorkflows.push(await page.evaluate((id) => ({
+    workflowId: id,
+    overflowX: document.body.scrollWidth > innerWidth + 1,
+    hasWorkbench: Boolean(document.querySelector('.video-workbench')),
+    hasForm: Boolean(document.querySelector('.evaluation-form')),
+  }), workflowId))
+}
+
 await page.goto(`${baseUrl}#/workflow/task-preference_evaluation`, { waitUntil: 'networkidle0' })
 await page.waitForSelector('.workflow-workspace')
 await settle()
+await page.$eval('.evaluation-bottom-bar .ebb-codex', (button) => button.click())
+await new Promise((resolve) => setTimeout(resolve, 200))
+report.codexAfterOpen = Boolean(await page.$('.workflow-codex'))
+if (!report.codexAfterOpen) throw new Error(`El Codex mobile no abrió: ${JSON.stringify({ report, route: await page.url() })}`)
+report.codexKeepsActionsVisible = await page.evaluate(() => {
+  const codex = document.querySelector('.workflow-codex')?.getBoundingClientRect()
+  const actions = document.querySelector('.evaluation-bottom-bar')?.getBoundingClientRect()
+  return Boolean(codex && actions && codex.bottom <= actions.top + 1)
+})
+await page.$eval('.workflow-codex-backdrop', (backdrop) => backdrop.click())
+await page.waitForSelector('.workflow-codex', { hidden: true })
+report.codexClosesFromBackdrop = true
 screenshot = path.join(outputDir, 'aurum-academy-workspace-mobile.png')
 await page.screenshot({ path: screenshot, fullPage: true })
 report.screenshots.push(screenshot)
@@ -135,6 +177,7 @@ report.views.push(await metrics('student-workspace-mobile'))
 await browser.close()
 console.log(JSON.stringify(report, null, 2))
 
-if (errors.length || report.views.some((view) => view.overflowX) || report.counts.studentTasks !== 10 || report.counts.adminTasks !== 10 || report.counts.bboxSelections !== 1 || report.counts.savedIssues !== 1) {
+const invalidMobileWorkflow = report.mobileWorkflows.some((workflow) => workflow.overflowX || !workflow.hasWorkbench || !workflow.hasForm)
+if (errors.length || report.views.some((view) => view.overflowX) || invalidMobileWorkflow || !report.issueDialogFocusReturned || !report.codexKeepsActionsVisible || !report.codexClosesFromBackdrop || report.counts.studentTasks !== 10 || report.counts.adminTasks !== 10 || report.counts.bboxSelections !== 1 || report.counts.savedIssues !== 1) {
   process.exitCode = 1
 }
