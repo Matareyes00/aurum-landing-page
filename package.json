@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "verify:ident": "npm run build && node scripts/run-ident-verification.mjs",
     "verify:academy": "npm run build && node scripts/run-academy-verification.mjs"
   },
   "dependencies": {

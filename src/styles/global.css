@@ -204,6 +204,8 @@ textarea {
   align-items: center;
   justify-content: center;
   gap: 2.2rem;
+  visibility: hidden;
+  opacity: 0;
 }
 
 .ident-symbol {
@@ -231,6 +233,7 @@ textarea {
   display: grid;
   place-items: center;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
 

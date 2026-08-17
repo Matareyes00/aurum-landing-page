@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { useCopy } from '../i18n'
 
-const SEEN_KEY = 'aurum-ident-seen'
+const COUNTDOWN = ['3', '2', '1']
 
 export default function Ident({ onReveal, onDone, reduced }) {
   const root = useRef(null)
@@ -15,50 +15,40 @@ export default function Ident({ onReveal, onDone, reduced }) {
       onDone()
       return
     }
-    let seen = false
-    try {
-      seen = !!sessionStorage.getItem(SEEN_KEY)
-    } catch { /* storage blocked */ }
-
     const ctx = gsap.context(() => {
       const t = gsap.timeline({
-        onComplete: () => {
-          try {
-            sessionStorage.setItem(SEEN_KEY, '1')
-          } catch { /* storage blocked */ }
-          onDone()
-        },
+        onComplete: onDone,
       })
       tl.current = t
 
-      if (!seen) {
-        const CIRC = 2 * Math.PI * 46
-        gsap.set('.count-sweep', { strokeDasharray: CIRC, strokeDashoffset: CIRC })
-        t.set('.ident-count', { autoAlpha: 1 })
-          .set('.count-num--3', { autoAlpha: 1 })
+      const CIRC = 2 * Math.PI * 46
+      gsap.set('.count-sweep', { strokeDasharray: CIRC, strokeDashoffset: CIRC })
+      gsap.set('.ident-core, .ident-symbol, .ident-word, .ident-sub', { autoAlpha: 0 })
+      gsap.set('.count-num', { autoAlpha: 0 })
+
+      t.set('.ident-count', { autoAlpha: 1 })
+
+      COUNTDOWN.forEach((number) => {
+        t.set(`.count-num--${number}`, { autoAlpha: 1 })
           .fromTo(
             '.count-sweep',
             { strokeDashoffset: CIRC },
-            { strokeDashoffset: 0, duration: 0.5, ease: 'none' }
+            { strokeDashoffset: 0, duration: 0.62, ease: 'none' }
           )
-          .set('.count-num--3', { autoAlpha: 0 })
-          .set('.count-num--2', { autoAlpha: 1 })
-          .fromTo(
-            '.count-sweep',
-            { strokeDashoffset: CIRC },
-            { strokeDashoffset: 0, duration: 0.5, ease: 'none' }
-          )
-          .to('.ident-flicker', {
-            duration: 0.28,
-            keyframes: [
-              { opacity: 0.14 },
-              { opacity: 0 },
-              { opacity: 0.22 },
-              { opacity: 0 },
-            ],
-          }, '-=0.1')
-          .set('.ident-count', { autoAlpha: 0 })
-      }
+          .set(`.count-num--${number}`, { autoAlpha: 0 })
+      })
+
+      t.to('.ident-flicker', {
+        duration: 0.28,
+        keyframes: [
+          { opacity: 0.14 },
+          { opacity: 0 },
+          { opacity: 0.22 },
+          { opacity: 0 },
+        ],
+      }, '-=0.08')
+        .set('.ident-count', { autoAlpha: 0 })
+        .set('.ident-core', { autoAlpha: 1 })
 
       t.fromTo(
         '.ident-symbol',
@@ -67,21 +57,21 @@ export default function Ident({ onReveal, onDone, reduced }) {
           autoAlpha: 1,
           scale: 1,
           filter: 'blur(0px)',
-          duration: seen ? 0.9 : 1.3,
+          duration: 1.15,
           ease: 'power2.out',
         }
       )
         .fromTo(
           '.ident-word',
           { autoAlpha: 0, scale: 0.94 },
-          { autoAlpha: 1, scale: 1, duration: seen ? 0.7 : 1.1, ease: 'power2.out' },
+          { autoAlpha: 1, scale: 1, duration: 0.95, ease: 'power2.out' },
           '-=0.6'
         )
         .fromTo('.ident-sub', { autoAlpha: 0 }, { autoAlpha: 0.9, duration: 0.6 }, '-=0.4')
         .to(
           '.ident-core',
           { autoAlpha: 0, duration: 0.55, ease: 'power1.in' },
-          seen ? '+=0.2' : '+=0.55'
+          '+=0.55'
         )
         .call(onReveal, [], '-=0.1')
         .to('.ident-gate--top', { scaleY: 0, duration: 1.15, ease: 'power4.inOut' })
@@ -114,6 +104,7 @@ export default function Ident({ onReveal, onDone, reduced }) {
         </svg>
         <span className="count-num count-num--3">3</span>
         <span className="count-num count-num--2">2</span>
+        <span className="count-num count-num--1">1</span>
       </div>
       <div className="ident-core">
         <img className="ident-symbol" src="/symbol-small.png" alt="" />

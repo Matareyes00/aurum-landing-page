@@ -42,8 +42,8 @@ src/
 
 ## Efectos
 
-- **Apertura**: countdown de cabecera de bobina (solo primera visita por
-  sesión) + placa de productora + cortinas. Click la saltea.
+- **Apertura**: countdown de cabecera de bobina `3 → 2 → 1` + placa de
+  productora + cortinas. Se reproduce en cada carga directa; click la saltea.
 - **Scrub de edición** (ESC. 02, desktop): el viewer se pinnea y el scroll
   scrubea el clip — timecode, cortes de plano, anotaciones por TC, sello.
   En mobile: anotaciones como log bajo el monitor.
