@@ -158,21 +158,88 @@ export function createSeedDb() {
   }
 }
 
+const USER_ROLES = new Set(['admin', 'student', 'expert'])
+const USER_TEXT_FIELDS = ['password', 'name', 'craft', 'email', 'bio']
+
+function isRecord(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+}
+
+function normalizeUsers(value, fallback) {
+  if (!Array.isArray(value)) return fallback
+  return value
+    .filter((user) => (
+      isRecord(user)
+      && typeof user.id === 'string'
+      && typeof user.username === 'string'
+      && USER_ROLES.has(user.role)
+    ))
+    .map((user) => {
+      const normalized = { id: user.id, username: user.username, role: user.role }
+      for (const field of USER_TEXT_FIELDS) {
+        if (typeof user[field] === 'string') normalized[field] = user[field]
+      }
+      return normalized
+    })
+}
+
+function normalizeAssignments(value, fallback) {
+  if (!isRecord(value)) return fallback
+  return Object.fromEntries(
+    Object.entries(value)
+      .filter(([userId, ids]) => typeof userId === 'string' && Array.isArray(ids))
+      .map(([userId, ids]) => [userId, ids.filter((id) => typeof id === 'string')]),
+  )
+}
+
+function normalizeWorkflowConfigs(value, fallback) {
+  if (!isRecord(value)) return fallback
+  return Object.fromEntries(WORKFLOW_IDS.map((workflowId) => {
+    const base = fallback[workflowId]
+    const config = value[workflowId]
+    if (!isRecord(config)) return [workflowId, base]
+    return [workflowId, {
+      workflowId,
+      enabled: typeof config.enabled === 'boolean' ? config.enabled : base.enabled,
+      rubricDimensions: Array.isArray(config.rubricDimensions) ? config.rubricDimensions.filter((item) => typeof item === 'string') : base.rubricDimensions,
+      primaryReasons: Array.isArray(config.primaryReasons) ? config.primaryReasons.filter(isRecord) : base.primaryReasons,
+      codexCategories: Array.isArray(config.codexCategories) ? config.codexCategories.filter((item) => typeof item === 'string') : base.codexCategories,
+      artifactTaxonomy: Array.isArray(config.artifactTaxonomy) ? config.artifactTaxonomy.filter(isRecord) : base.artifactTaxonomy,
+      updatedAt: typeof config.updatedAt === 'string' ? config.updatedAt : base.updatedAt,
+    }]
+  }))
+}
+
+function normalizeTasks(value, fallback) {
+  if (!Array.isArray(value)) return fallback
+  return value.filter((task) => (
+    isRecord(task)
+    && typeof task.id === 'string'
+    && WORKFLOW_IDS.includes(task.workflowId)
+    && Array.isArray(task.outputs)
+    && Array.isArray(task.assignedUserIds)
+  ))
+}
+
 export function normalizeDb(candidate) {
   const seed = createSeedDb()
-  if (!candidate || typeof candidate !== 'object') return seed
+  if (!isRecord(candidate)) return seed
+  const legacyAssignments = isRecord(candidate.assignments) ? candidate.assignments : undefined
   return {
-    ...seed,
-    ...candidate,
     version: 2,
-    users: Array.isArray(candidate.users) ? candidate.users : seed.users,
-    courseAssignments: candidate.courseAssignments || candidate.assignments || seed.courseAssignments,
-    workflowAssignments: candidate.workflowAssignments || seed.workflowAssignments,
-    progress: candidate.progress || {},
-    workflowConfigs: { ...seed.workflowConfigs, ...(candidate.workflowConfigs || {}) },
-    tasks: Array.isArray(candidate.tasks) ? candidate.tasks : seed.tasks,
-    evaluations: candidate.evaluations || {},
-    codex: candidate.codex?.tags ? candidate.codex : seed.codex,
+    users: normalizeUsers(candidate.users, seed.users),
+    courseAssignments: normalizeAssignments(
+      candidate.courseAssignments ?? legacyAssignments,
+      seed.courseAssignments,
+    ),
+    workflowAssignments: normalizeAssignments(candidate.workflowAssignments, seed.workflowAssignments),
+    progress: isRecord(candidate.progress) ? candidate.progress : {},
+    workflowConfigs: normalizeWorkflowConfigs(candidate.workflowConfigs, seed.workflowConfigs),
+    tasks: normalizeTasks(candidate.tasks, seed.tasks),
+    evaluations: isRecord(candidate.evaluations) ? candidate.evaluations : {},
+    codex: isRecord(candidate.codex) && Array.isArray(candidate.codex.tags)
+      ? { version: String(candidate.codex.version || 'v2'), updatedAt: String(candidate.codex.updatedAt || ''), tags: candidate.codex.tags.filter(isRecord) }
+      : seed.codex,
   }
 }
 

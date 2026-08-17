@@ -1658,9 +1658,16 @@
    RESPONSIVE
    ================================================================== */
 
-@media (max-width: 860px) {
-  .pnav-link span { display: none; }
+@media (max-width: 1120px) {
+  .pnav { gap: 0.75rem; padding-inline: 1rem; }
+  .pnav-link { min-width: 40px; justify-content: center; padding-inline: 0.55rem; }
+  .pnav-link span,
   .pnav-user-meta { display: none; }
+  .pnav-user { margin-left: 0; }
+  .pnav-user-btn { padding-right: 0.4rem; }
+}
+
+@media (max-width: 860px) {
   .home-stats { grid-template-columns: 1fr; }
   .profile-grid { grid-template-columns: 1fr; }
   .profile-hero { align-items: flex-start; flex-direction: column; }

@@ -376,11 +376,30 @@ export function getProgress(userId, courseId) {
 
 /* ---------------- mutators ---------------- */
 
-export function updateUser(userId, patch) {
+const PROFILE_FIELDS = ['name', 'craft', 'email', 'bio']
+const ASSIGNABLE_ROLES = new Set(['student', 'expert'])
+
+export function updateProfile(userId, profile) {
+  const safeProfile = Object.fromEntries(
+    PROFILE_FIELDS
+      .filter((field) => typeof profile?.[field] === 'string')
+      .map((field) => [field, profile[field]]),
+  )
   persist({
     ...db,
-    users: db.users.map((u) => (u.id === userId ? { ...u, ...patch } : u)),
+    users: db.users.map((u) => (u.id === userId ? { ...u, ...safeProfile } : u)),
   })
+}
+
+// Prototype-only admin operation. A real backend must enforce the caller's
+// admin role before applying this change; the client must never be trusted.
+export function updateUserRole(userId, role) {
+  if (!ASSIGNABLE_ROLES.has(role)) return false
+  persist({
+    ...db,
+    users: db.users.map((u) => (u.id === userId ? { ...u, role } : u)),
+  })
+  return true
 }
 
 export function assignCourse(userId, courseId) {

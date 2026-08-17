@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { navigate } from '../../router'
-import { COURSES, assignCourse, getAssignments, unassignCourse, updateUser } from '../../data'
+import { COURSES, assignCourse, getAssignments, unassignCourse, updateUserRole } from '../../data'
 import { getEvaluation, reviewEvaluation } from '../../evaluations'
 import { useDb } from '../../store'
 import {
@@ -40,7 +40,7 @@ function PeopleAdmin({ db }) {
     const assignedTasks = db.tasks.filter((task) => task.assignedUserIds?.includes(user.id)).length
     const submissions = Object.values(db.evaluations).filter((byUser) => byUser[user.id]?.status === 'submitted').length
     return <section className="admin-person" key={user.id}>
-      <header><div className="admin-person-id"><Avatar name={user.name} size={44} /><div><h2>{user.name}</h2><span>{user.craft} · @{user.username}</span></div></div><div className="admin-person-stats"><span><strong>{assignedTasks}</strong> {t.tasks}</span><span><strong>{submissions}</strong> {t.sent}</span><select value={user.role} onChange={(event) => updateUser(user.id, { role: event.target.value })}><option value="student">{t.roleStudent}</option><option value="expert">{t.roleExpert}</option></select></div></header>
+      <header><div className="admin-person-id"><Avatar name={user.name} size={44} /><div><h2>{user.name}</h2><span>{user.craft} · @{user.username}</span></div></div><div className="admin-person-stats"><span><strong>{assignedTasks}</strong> {t.tasks}</span><span><strong>{submissions}</strong> {t.sent}</span><select value={user.role} onChange={(event) => updateUserRole(user.id, event.target.value)}><option value="student">{t.roleStudent}</option><option value="expert">{t.roleExpert}</option></select></div></header>
       <div className="admin-assignment-band"><h3>{t.enabledWorkflows}</h3><div className="assignment-grid">{WORKFLOWS.map((workflow) => <Toggle key={workflow.id} checked={workflows.has(workflow.id)} label={`WF${String(workflow.number).padStart(2, '0')} · ${workflow.title}`} onChange={(checked) => setWorkflowAssignment(user.id, workflow.id, checked)} />)}</div></div>
       <div className="admin-assignment-band"><h3>{t.courses}</h3><div className="assignment-grid assignment-grid--courses">{COURSES.map((course) => <Toggle key={course.id} checked={courses.has(course.id)} label={course.title} onChange={(checked) => checked ? assignCourse(user.id, course.id) : unassignCourse(user.id, course.id)} />)}</div></div>
     </section>

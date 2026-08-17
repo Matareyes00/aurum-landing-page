@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { DB_V1_KEY, DB_V2_KEY, createSeedDb, loadAcademyDb, migrateV1, normalizeDb, writeAcademyDb } from './storage'
 import { getDb, transact } from './store'
+import { updateProfile, updateUserRole } from './data'
 
 function memoryStorage(entries = {}) {
   const values = new Map(Object.entries(entries))
@@ -44,6 +45,39 @@ describe('Academy storage v2', () => {
     expect(db.users).toEqual([])
     expect(Object.keys(db.workflowConfigs)).toHaveLength(10)
     expect(db.evaluations).toEqual({})
+  })
+
+  it('drops unknown root fields and malformed security-sensitive records', () => {
+    const db = normalizeDb({
+      version: 999,
+      injected: 'must-not-survive',
+      users: [
+        { id: 'ok', username: 'ok', role: 'student', name: 'Valid', injected: true },
+        { id: 'bad', username: 'bad', role: 'superadmin' },
+      ],
+      courseAssignments: { ok: ['c_codex', 42], bad: 'not-an-array' },
+      workflowConfigs: { preference_evaluation: { enabled: 'yes', unknown: true } },
+    })
+
+    expect(db.injected).toBeUndefined()
+    expect(db.users).toEqual([{ id: 'ok', username: 'ok', role: 'student', name: 'Valid' }])
+    expect(db.courseAssignments).toEqual({ ok: ['c_codex'] })
+    expect(db.workflowConfigs.preference_evaluation.enabled).toBe(true)
+    expect(db.workflowConfigs.preference_evaluation.unknown).toBeUndefined()
+  })
+
+  it('keeps profile edits separate from role changes', () => {
+    transact(createSeedDb())
+    updateProfile('u_ana', { name: 'Ana segura', role: 'admin', password: 'changed' })
+
+    expect(getDb().users.find((user) => user.id === 'u_ana')).toMatchObject({
+      name: 'Ana segura',
+      role: 'student',
+      password: 'alumno',
+    })
+    expect(updateUserRole('u_ana', 'admin')).toBe(false)
+    expect(updateUserRole('u_ana', 'expert')).toBe(true)
+    expect(getDb().users.find((user) => user.id === 'u_ana').role).toBe('expert')
   })
 
   it('creates a seed with URL metadata instead of inline media', () => {

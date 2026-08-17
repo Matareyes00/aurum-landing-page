@@ -102,6 +102,7 @@ export default function VideoWorkbench({ task, issues, selectedIssue, onSelectIs
   const capture = (output, index) => {
     const video = refs.current[index]
     if (!video) return
+    markInspected()
     refs.current.forEach((item) => item?.pause())
     setPlaying(false)
     let frameDataUrl = null

@@ -1,9 +1,21 @@
 import os from 'node:os'
 import path from 'node:path'
+import { existsSync } from 'node:fs'
 import puppeteer from 'puppeteer-core'
 
 const baseUrl = process.env.ACADEMY_URL || 'http://127.0.0.1:4173/academy/app/'
-const executablePath = process.env.CHROME_PATH || 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
+const browserCandidates = process.platform === 'win32'
+  ? [
+      'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+      'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+    ]
+  : ['/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser']
+const executablePath = process.env.CHROME_PATH || browserCandidates.find(existsSync)
+if (!executablePath) {
+  throw new Error('No se encontró Chrome/Edge. Definí CHROME_PATH con la ruta del navegador.')
+}
 const outputDir = os.tmpdir()
 const browser = await puppeteer.launch({ executablePath, headless: true, args: ['--no-sandbox'] })
 const page = await browser.newPage()
@@ -69,9 +81,13 @@ report.video = await page.$$eval('video', (videos) => videos.map((video) => ({
   height: video.videoHeight,
 })))
 
-await page.click('.video-add-issue')
+await page.click('.stage-stepper li:nth-child(2) .stage-step')
+await page.click('.video-pane.is-output-active .video-add-issue')
 await page.waitForSelector('.issue-modal')
 await page.click('.issue-codex .codex-tag')
+const choiceGroups = await page.$$('.issue-fields .segmented')
+await (await choiceGroups[0].$('button')).click()
+await (await choiceGroups[1].$('button')).click()
 const bboxStage = await page.$('.bbox-stage')
 if (bboxStage) {
   const box = await bboxStage.boundingBox()

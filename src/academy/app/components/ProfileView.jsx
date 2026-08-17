@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { updateUser, useDb, getAssignments, getProgress, courseById, courseCompletion } from '../data'
+import { updateProfile, useDb, getAssignments, getProgress, courseById, courseCompletion } from '../data'
 import { Avatar, Field, Eyebrow, ProgressBar } from './ui'
 import { IconCheck, IconStar } from '../icons'
 import Certificate from './Certificate'
@@ -28,7 +28,7 @@ export default function ProfileView({ user }) {
 
   const save = (e) => {
     e.preventDefault()
-    updateUser(user.id, form)
+    updateProfile(user.id, form)
     setSaved(true)
   }
 

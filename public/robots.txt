@@ -2,6 +2,7 @@
 # Search engines: full access to the public site.
 User-agent: *
 Allow: /
+Disallow: /academy/app/
 
 # AI training / bulk scraping crawlers — blocked by default.
 # (Aurum works with AI labs; keep control over what trains on this content.)
