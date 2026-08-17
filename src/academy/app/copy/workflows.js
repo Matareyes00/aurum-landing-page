@@ -32,6 +32,9 @@ export const WORKBENCH = {
     zoomLevel: 'Nivel de zoom',
     addIssueOn: 'Issue en',
     outputSwitch: 'Elegir output',
+    controlling: 'Controlando',
+    chooseInPosition: 'IN armado · elegí una posición en la línea de tiempo',
+    chooseOutPosition: 'OUT armado · elegí una posición en la línea de tiempo',
   },
   en: {
     seek: 'Video position',
@@ -53,6 +56,9 @@ export const WORKBENCH = {
     zoomLevel: 'Zoom level',
     addIssueOn: 'Issue on',
     outputSwitch: 'Choose output',
+    controlling: 'Controlling',
+    chooseInPosition: 'IN armed · choose a position on the timeline',
+    chooseOutPosition: 'OUT armed · choose a position on the timeline',
   },
 }
 

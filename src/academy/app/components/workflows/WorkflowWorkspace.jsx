@@ -143,7 +143,7 @@ export default function WorkflowWorkspace({ user, taskId }) {
         <section className={`task-brief ${stageClass('context')}`} data-stage="context"><div><span>{t.prompt}</span><p>{task.prompt || t.noPrompt}</p></div><div><span>{t.objective}</span><p>{task.objective || t.noObjective}</p></div><div><span>{t.priority}</span><p>{task.priority || t.generalCriteria}</p></div></section>
 
         <div className={stageClass('inspection')} data-stage="inspection">
-          <VideoWorkbench task={task} issues={evaluation.issues} selectedIssue={selectedIssue} onSelectIssue={setSelectedIssue} onAddIssue={setIssueContext} onInspect={() => setInspected(true)} disabled={disabled} />
+          <VideoWorkbench key={task.id} task={task} issues={evaluation.issues} selectedIssue={selectedIssue} onSelectIssue={setSelectedIssue} onAddIssue={setIssueContext} onInspect={() => setInspected(true)} disabled={disabled} />
         </div>
 
         <section className={`issues-section ${stageClass('annotation')}`} data-stage="annotation">

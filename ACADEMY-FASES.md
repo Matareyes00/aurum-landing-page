@@ -191,7 +191,11 @@ Diseñado y probado en `aurum-brain`; ahora vive en el Academy en JSX.
 
 ### A/B en mobile
 - [x] Selector de output persistente sobre el reproductor
-- [x] A ≤ 860 px se muestra un output por vez, con los dos videos sincronizados
+- [x] A ≤ 860 px se muestra un output por vez y el selector conserva el estado de cada uno
+- [x] Cada output conserva controles independientes: tiempo, reproducción, velocidad,
+      In/Out, loop y zoom
+- [x] In/Out se pueden fijar en el playhead o armar antes de elegir una posición
+- [x] El modal de evidencia tiene scroll interno y acciones sticky sobre el bbox
 
 ### Tests
 - [x] Etapas: estados, progreso y primera etapa pendiente
@@ -238,7 +242,7 @@ Diseñado y probado en `aurum-brain`; ahora vive en el Academy en JSX.
       del contenido de los cursos
 
 ### Pendiente de la Fase 5
-- [x] Dependencias instaladas y `npm run test`: 22/22 tests
+- [x] Dependencias instaladas y `npm run test`: 23/23 tests
 - [x] Revisión automatizada a 390 px de los diez workflows
 - [ ] Reemplazar los clips CC0 por material propio de Aurum cuando exista
 - [ ] Traducir el contenido editorial de los cursos
@@ -249,12 +253,14 @@ Diseñado y probado en `aurum-brain`; ahora vive en el Academy en JSX.
 
 Última pasada: 2026-08-16.
 
-- [x] `npm test` — 22/22 tests
+- [x] `npm test` — 23/23 tests
 - [x] `npm run build` — build de producción correcto
 - [x] `npm audit` — 0 vulnerabilidades conocidas
 - [x] `npm run verify:academy` — desktop, tablet y mobile sin overflow
 - [x] Los diez workflows montan workbench y formulario a 390 px
 - [x] Video A/B, Codex, issue con bbox, cierre por backdrop y retorno de foco
+- [x] Independencia de zoom/velocidad/seek por output e In/Out `0.45 → 0.95`
+- [x] Scroll del modal y controles mobile libres de la barra inferior fija
 - [x] Colas de alumno y Gestión contienen las diez tareas esperadas
 - [ ] Smoke manual del cambio de idioma entre recargas y pestañas
 - [ ] Crear una tarea N-way desde Gestión y evaluarla de punta a punta

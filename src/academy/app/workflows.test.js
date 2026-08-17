@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { createEmptyResult, createEvaluation, exportEvaluation, summaryRows, validateEvaluation } from './evaluations'
 import { annotationPixels } from './components/workflows/IssueDialog'
+import { createOutputControls, updateMarkRange } from './components/workflows/VideoWorkbench'
 import { createSeedDb } from './storage'
 import { firstPendingStage, STAGES, stageProgress, stageStates } from './stages'
 import { getTasksForUser } from './tasks'
@@ -20,6 +21,19 @@ describe('workflow domain', () => {
       expect(createEmptyResult(task)).toBeTypeOf('object')
       expect(workflowById(workflowId).number).toBeGreaterThan(0)
     }
+  })
+
+  it('keeps video controls and temporal marks independent per output', () => {
+    const controls = createOutputControls([{ durationSec: 10 }, { durationSec: 20 }])
+    const markedIn = updateMarkRange({ ...controls[0], outSec: 2 }, 'in', 3)
+    const markedOut = updateMarkRange(markedIn, 'out', 2)
+
+    expect(controls).toHaveLength(2)
+    expect(controls[0]).not.toBe(controls[1])
+    expect(markedIn.inSec).toBe(3)
+    expect(markedIn.outSec).toBeNull()
+    expect(markedOut.outSec).toBe(3)
+    expect(controls[1]).toMatchObject({ inSec: null, outSec: null, zoom: 1, rate: 1 })
   })
 
   it('only exposes assigned and enabled tasks to an evaluator', () => {

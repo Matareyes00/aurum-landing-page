@@ -14,7 +14,7 @@ implementada en `src/academy/app/`.
 - Los videos y capturas no se persisten en `localStorage`; las tareas guardan solo
   metadata y URLs CORS-safe. Los frames capturados existen únicamente en memoria.
 - Vitest cubre storage, migración, validadores, exportadores y geometría de bbox
-  (22 tests). El verificador de navegador recorre los diez workflows a 390 px,
+  (23 tests). El verificador de navegador recorre los diez workflows a 390 px,
   además de las vistas clave en tablet y desktop.
 
 ## Pendientes prioritarios

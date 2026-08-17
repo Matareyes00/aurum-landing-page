@@ -38,7 +38,7 @@ page.on('console', (message) => {
   if (message.type() === 'error' && !message.text().includes('Failed to load resource') && !message.text().includes('favicon')) errors.push(message.text())
 })
 page.on('response', (response) => {
-  if (response.status() >= 400 && !response.url().includes('favicon')) errors.push(`${response.status()} ${response.url()}`)
+  if (response.status() >= 400 && !response.url().includes('favicon') && !response.url().includes('fonts.gstatic.com')) errors.push(`${response.status()} ${response.url()}`)
 })
 page.on('requestfailed', (request) => {
   const reason = request.failure()?.errorText || 'unknown failure'
@@ -94,14 +94,44 @@ report.video = await page.$$eval('video', (videos) => videos.map((video) => ({
 })))
 
 await page.click('.stage-stepper li:nth-child(2) .stage-step')
+await page.click('.frame-zoom button:last-child')
+await page.click('.frame-zoom button:last-child')
+await page.click('.frame-rates button:nth-child(3)')
+await page.click('.frame-marks button:nth-child(1)')
+await page.$eval('.timeline input', (input) => {
+  const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
+  setValue.call(input, '0.45')
+  input.dispatchEvent(new Event('input', { bubbles: true }))
+  input.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }))
+})
+await page.$eval('.timeline input', (input) => {
+  const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
+  setValue.call(input, '0.95')
+  input.dispatchEvent(new Event('input', { bubbles: true }))
+})
+await page.click('.frame-marks button:nth-child(2)')
+await page.click('.output-switcher button:nth-child(2)')
+report.independentControlsBeforeBChange = await page.$$eval('.video-pane video', (videos) => videos.map((video) => ({ transform: video.style.transform, rate: video.playbackRate, currentSec: Number(video.currentTime.toFixed(2)) })))
+await page.click('.frame-zoom button:last-child')
+report.independentControlsAfterBChange = await page.$$eval('.video-pane video', (videos) => videos.map((video) => ({ transform: video.style.transform, rate: video.playbackRate, currentSec: Number(video.currentTime.toFixed(2)) })))
+await page.click('.output-switcher button:nth-child(1)')
 await page.click('.video-pane.is-output-active .video-add-issue')
 await page.waitForSelector('.issue-modal')
+report.issueRange = await page.$$eval('.issue-fields .wf-field-row input', (inputs) => inputs.map((input) => Number(input.value)))
+report.issueModalScroll = await page.$eval('.issue-fields', (fields) => ({
+  scrollable: fields.scrollHeight > fields.clientHeight,
+  overflowY: getComputedStyle(fields).overflowY,
+}))
+screenshot = path.join(outputDir, 'aurum-academy-issue-modal-desktop.png')
+await page.screenshot({ path: screenshot })
+report.screenshots.push(screenshot)
 await page.click('.issue-codex .codex-tag')
 const choiceGroups = await page.$$('.issue-fields .segmented')
 await (await choiceGroups[0].$('button')).click()
 await (await choiceGroups[1].$('button')).click()
 const bboxStage = await page.$('.bbox-stage')
 if (bboxStage) {
+  await bboxStage.evaluate((element) => element.scrollIntoView({ block: 'center' }))
   const box = await bboxStage.boundingBox()
   await page.mouse.move(box.x + box.width * 0.2, box.y + box.height * 0.25)
   await page.mouse.down()
@@ -113,6 +143,10 @@ report.bboxReadout = await page.$eval('.bbox-readout', (element) => element.text
 await page.click('.wf-modal-actions .wf-btn--gold')
 await page.waitForSelector('.issue-modal', { hidden: true })
 report.counts.savedIssues = await page.$$eval('.issue-row', (items) => items.length)
+await page.click('.output-switcher button:nth-child(2)')
+report.counts.outputBIssueMarkers = await page.$$eval('.timeline-marker', (items) => items.length)
+await page.click('.output-switcher button:nth-child(1)')
+report.counts.outputAIssueMarkers = await page.$$eval('.timeline-marker', (items) => items.length)
 
 await page.click('.video-pane.is-output-active .video-add-issue')
 await page.waitForSelector('.issue-modal')
@@ -157,6 +191,27 @@ for (const workflowId of workflowIds) {
 await page.goto(`${baseUrl}#/workflow/task-preference_evaluation`, { waitUntil: 'networkidle0' })
 await page.waitForSelector('.workflow-workspace')
 await settle()
+await page.click('.stage-stepper li:nth-child(2) .stage-step')
+await new Promise((resolve) => setTimeout(resolve, 200))
+report.mobileControls = await page.evaluate(() => ({
+  outputTabs: document.querySelectorAll('.output-switcher button').length,
+  visiblePanes: Array.from(document.querySelectorAll('.video-pane')).filter((pane) => getComputedStyle(pane).display !== 'none').length,
+  activeLabel: document.querySelector('.frame-active-output strong')?.textContent,
+  hasTimeline: Boolean(document.querySelector('.active-output-controls .timeline')),
+  scrollHeight: document.scrollingElement.scrollHeight,
+  clientHeight: document.scrollingElement.clientHeight,
+  mainBottom: Math.round(document.querySelector('.workflow-main').getBoundingClientRect().bottom + scrollY),
+}))
+await page.evaluate(() => window.scrollTo(0, document.scrollingElement.scrollHeight))
+await new Promise((resolve) => setTimeout(resolve, 250))
+report.mobileControls.actionsClearOfBottomBar = await page.evaluate(() => {
+  const controls = document.querySelector('.active-output-controls')?.getBoundingClientRect()
+  const bottomBar = document.querySelector('.evaluation-bottom-bar')?.getBoundingClientRect()
+  return Boolean(controls && bottomBar && controls.bottom <= bottomBar.top + 1)
+})
+screenshot = path.join(outputDir, 'aurum-academy-workbench-mobile.png')
+await page.screenshot({ path: screenshot, fullPage: true })
+report.screenshots.push(screenshot)
 await page.$eval('.evaluation-bottom-bar .ebb-codex', (button) => button.click())
 await new Promise((resolve) => setTimeout(resolve, 200))
 report.codexAfterOpen = Boolean(await page.$('.workflow-codex'))
@@ -178,6 +233,11 @@ await browser.close()
 console.log(JSON.stringify(report, null, 2))
 
 const invalidMobileWorkflow = report.mobileWorkflows.some((workflow) => workflow.overflowX || !workflow.hasWorkbench || !workflow.hasForm)
-if (errors.length || report.views.some((view) => view.overflowX) || invalidMobileWorkflow || !report.issueDialogFocusReturned || !report.codexKeepsActionsVisible || !report.codexClosesFromBackdrop || report.counts.studentTasks !== 10 || report.counts.adminTasks !== 10 || report.counts.bboxSelections !== 1 || report.counts.savedIssues !== 1) {
+const [aBefore, bBefore] = report.independentControlsBeforeBChange || []
+const [aAfter, bAfter] = report.independentControlsAfterBChange || []
+const independentControlsFailed = aBefore?.transform !== 'scale(2)' || bBefore?.transform !== 'scale(1)' || aBefore?.rate !== 0.5 || bBefore?.rate !== 1 || aAfter?.transform !== 'scale(2)' || bAfter?.transform !== 'scale(1.5)'
+const issueRangeFailed = Math.abs(report.issueRange?.[0] - 0.45) > 0.01 || Math.abs(report.issueRange?.[1] - 0.95) > 0.01
+const mobileControlsFailed = report.mobileControls?.outputTabs !== 2 || report.mobileControls?.visiblePanes !== 1 || !report.mobileControls?.activeLabel || !report.mobileControls?.hasTimeline || report.mobileControls?.scrollHeight <= report.mobileControls?.clientHeight || report.mobileControls?.scrollHeight < report.mobileControls?.mainBottom || !report.mobileControls?.actionsClearOfBottomBar
+if (errors.length || report.views.some((view) => view.overflowX) || invalidMobileWorkflow || independentControlsFailed || issueRangeFailed || mobileControlsFailed || !report.issueModalScroll?.scrollable || !['auto', 'scroll'].includes(report.issueModalScroll?.overflowY) || !report.issueDialogFocusReturned || !report.codexKeepsActionsVisible || !report.codexClosesFromBackdrop || report.counts.studentTasks !== 10 || report.counts.adminTasks !== 10 || report.counts.bboxSelections !== 1 || report.counts.savedIssues !== 1 || report.counts.outputAIssueMarkers !== 1 || report.counts.outputBIssueMarkers !== 0) {
   process.exitCode = 1
 }
